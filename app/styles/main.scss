@@ -1,0 +1,89 @@
+html,
+body {
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+
+body {
+  background: #ddd;
+  padding-top: 5rem;
+  font-size: 1rem;
+}
+
+.application.data button {
+  margin-right: 10px;
+}
+
+.application.governments .container,
+.application.demo .container {
+  width: auto;
+}
+
+.application.demo .lead {
+  margin-top: 10px;
+}
+
+.with-border {
+  border: 2px solid lightgrey;
+}
+
+.main-wrapper {
+  background: #fff;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+}
+
+.main-content {
+  text-align: left;
+}
+
+.lead {
+  font-style: italic;
+
+  .fa {
+    color: gray;
+  }
+}
+
+select {
+  margin-left: 5px;
+  margin-right: 15px;
+}
+
+.icon-spinner {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+// Styling for the ember-models-table addon
+
+$models-table-font-size: 0.8rem;
+
+.models-table-wrapper {
+  border: 1px solid lightgrey;
+  padding: 10px;
+
+  table > thead > tr:nth-child(1) > th:nth-child(1) {
+    width: 75px;
+  }
+}
+
+.models-table-wrapper,
+.models-table-wrapper select,
+.models-table-wrapper input {
+  font-size: $models-table-font-size;
+}
+
+.global-filter-wrapper {
+  margin-bottom: 10px;
+}
+
+.form-group input {
+  margin-left: 10px;
+}
+
+.btn {
+  margin: 5px;
+  font-size: $models-table-font-size;
+}

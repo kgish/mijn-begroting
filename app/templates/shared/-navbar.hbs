@@ -1,0 +1,35 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsHeader" aria-controls="navbarsHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    {{#link-to 'application' class='navbar-brand'}}<img src="assets/images/logo.svg" height="50" style="margin-top:10px"/><span class="sr-only">(current)</span>{{/link-to}}
+
+    <div class="collapse navbar-collapse" id="navbarsHeader">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                {{#link-to 'governments.index' class='nav-link'}}Governments{{/link-to}}
+            </li>
+            <li class="nav-item">
+                {{#link-to 'data' class='nav-link'}}Data{{/link-to}}
+            </li>
+            <li class="nav-item">
+                {{#link-to 'demo' class='nav-link'}}Demo{{/link-to}}
+            </li>
+        </ul>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item">
+                {{#link-to 'about' class='nav-link'}}About{{/link-to}}
+            </li>
+            <li class="nav-item">
+                {{#link-to 'contact' class='nav-link'}}Contact{{/link-to}}
+            </li>
+            <li class="nav-item">
+                {{#link-to 'credits' class='nav-link'}}Credits{{/link-to}}
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>

@@ -1,0 +1,36 @@
+{{#page-header title='Governments' description='List of government bodies by kind'}}
+    {{#if governments.length}}
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-6 align-self-center">
+                <form>
+                    <div class="form-group">
+                        <label for="select-kind">Kind:</label>
+                        {{#x-select value=kind id="select-kind" class="custom-select" action="selectKind" as |xs|}}
+                            {{#each kinds as |kind|}}
+                                {{#xs.option value=kind}}{{format-option kind}}{{/xs.option}}
+                            {{/each}}
+                        {{/x-select}}
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6 align-self-center">
+                <p class="pull-right">Found <strong>{{filteredGovernments.length}}</strong> {{plural-of kind kinds.length}}</p>
+            </div>
+        </div>
+
+        {{models-table
+            data=filteredGovernments
+            columns=columns
+            columnsAreUpdateable=true
+            filteringIgnoreCase=true
+            showColumnsDropdown=false
+            customIcons=customIcons
+            customClasses=customClasses
+            simplePaginationTemplate="components/models-table/simple-pagination"
+            show='showRecord'
+
+        }}
+    {{else}}
+        <p>No governments found.</p>
+    {{/if}}
+{{/page-header}}

@@ -1,0 +1,163 @@
+{{#page-header title='Data' description='Have lots of fun exploring interesting data'}}
+    <form>
+
+        <div class="row">
+
+            <div class="form-group">
+                <label for="year">Year:</label>
+                {{#x-select value=year id="year" class="custom-select" action="selectYear" as |xs|}}
+                    {{#xs.option value=0}}All{{/xs.option}}
+                    {{#each years as |year|}}
+                        {{#xs.option value=year}}{{year}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="period">Period:</label>
+                {{#x-select value=period id="period" class="custom-select" action="selectPeriod" as |xs|}}
+                    {{#each periods as |period|}}
+                        {{#xs.option value=period.value}}{{period.text}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="kind">Kind:</label>
+                {{#x-select value=kind id="kind" class="custom-select" action="selectKind" as |xs|}}
+                    {{#each kinds as |kind|}}
+                        {{#xs.option value=kind}}{{capitalize-words kind}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="plan">Plan:</label>
+                {{#x-select value=plan id="plan" class="custom-select" action="selectPlan" as |xs|}}
+                    {{#each plans as |plan|}}
+                        {{#xs.option value=plan.value}}{{plan.text}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="direction">Direction:</label>
+                {{#x-select value=direction id="direction" class="custom-select" action="selectDirection" as |xs|}}
+                    {{#each directions as |direction|}}
+                        {{#xs.option value=direction.value}}{{direction.text}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="order">Order:</label>
+                {{#x-select value=order id="order" class="custom-select" action="selectOrder" as |xs|}}
+                    {{#each orders as |order|}}
+                        {{#xs.option value=order.value}}{{order.text}}{{/xs.option}}
+                    {{/each}}
+                {{/x-select}}
+            </div>
+
+            <div class="form-group">
+                <label for="limit">Limit:</label>
+                {{#x-select value=limit id="limit" class="custom-select" action="selectLimit" as |xs|}}
+                    {{#each limits as |limit|}}
+                        {{#xs.option value=limit.value}}{{limit.text}}{{/xs.option}}
+                   {{/each}}
+                {{/x-select}}
+            </div>
+
+        </div>
+
+        <div class="form-group row">
+                <button class='btn btn-success{{disabledLabels}}' {{action "getLabels"}}>
+                    {{#if loadingLabels}}
+                        {{fa-icon 'spinner' spin=true}}
+                    {{/if}}
+                    Labels
+                </button>
+                <button class='btn btn-success{{disabledGovernments}}' {{action "getGovernments"}}>
+                    {{#if loadingGovernments}}
+                        {{fa-icon 'spinner' spin=true}}
+                    {{/if}}
+                    Governments
+                </button>
+        </div>
+
+    </form>
+
+    {{#if governments.length}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Kind</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each governments as |g|}}
+                    <tr>
+                        <td>{{g.code}}</td>
+                        <td>{{g.kind}}</td>
+                        <td>{{g.name}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{/if}}
+
+
+    {{#if labels.length}}
+        <form>
+            <div class="form-group row">
+                <label for="label_type" class="col-sm-2 col-form-label">Type:</label>
+                <div class="col-sm-10">
+                    {{#x-select value=label_type id="label_type" class="custom-select" action="selectLabelType" as |xs|}}
+                        {{#xs.option value='All'}}All{{/xs.option}}
+                        {{#each label_types as |label_type|}}
+                            {{#xs.option value=label_type}}{{label_type}}{{/xs.option}}
+                        {{/each}}
+                    {{/x-select}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="limit" class="col-sm-2 col-form-label">Label:</label>
+                <div class="col-sm-10">
+                    {{#x-select value=label id="label" class="custom-select" action="selectLabel" as |xs|}}
+                        {{#xs.option value='Select'}}Select{{/xs.option}}
+                        {{#each filteredLabels as |label index|}}
+                            {{#xs.option value=index}}[{{label.code}}] {{label.label}}{{/xs.option}}
+                        {{/each}}
+                    {{/x-select}}
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button class='btn btn-success{{disabledDocuments}}' {{action "getDocuments"}}>
+                        {{#if loadingDocuments}}
+                            {{fa-icon 'spinner' spin=true}}
+                        {{/if}}
+                        Documents</button>
+                </div>
+            </div>
+        </form>
+
+        {{#if documents.length}}
+            <h2>Documents</h2>
+            {{#each documents as |d idx|}}
+                <div class="result row">
+                    <h4><a href="{{d.openspending_url}}" target="_blank">{{add-nums idx 1}}. {{d.government_name}} : {{d.total_formatted}}</a></h4>
+                    <div class="progress">';
+                        <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:{{d.pct}}%">
+                            <span class="sr-only">{{d.pct}}% Complete</span>
+                    </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{/if}}
+
+    {{/if}}
+{{/page-header}}
