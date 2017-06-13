@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import config from './config/environment';
+import config from 'mijn-begroting/config/environment';
 
 const Router = Ember.Router.extend({
     location: config.locationType,
@@ -11,11 +11,8 @@ Router.map(function() {
     this.route('about');
     this.route('contact');
     this.route('credits');
-    this.route('demo');
     this.route('governments', function(){
-        this.route('show', {
-            path: ':government_id'
-        });
+        this.route('show', { path: ':government_id' });
     });
 });
 

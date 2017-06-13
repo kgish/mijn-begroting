@@ -14,5 +14,14 @@ export default Ember.Controller.extend({
         { propertyName: "metric", title: "Metric", filterWithSelect: true },
         { propertyName: "year",   title: "Year", filterWithSelect: true },
         { propertyName: "resource_uri", title: "Resource URI"}
-    ]
+    ],
+
+    actions: {
+        getMetrics() {
+
+        },
+        getDocuments() {
+            // url_docs http://www.openspending.nl/api/v1/documents/?government__kind=county&period=0&plan=budget&direction=in&limit=10&format=json
+        }
+    }
 });

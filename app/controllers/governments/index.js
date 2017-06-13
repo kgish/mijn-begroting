@@ -126,7 +126,7 @@ export default Ember.Controller.extend({
         },
         showRecord(record) {
             console.log(record);
-            this.transitionToRoute('governments.show', record);
+            this.transitionToRoute('governments.show', record.id);
         }
     }
 });
