@@ -2,6 +2,7 @@
 
 Personalized budgetering application for municipalities.
 
+Uses the [Openspending API](http://openspending.nl/api/v1/doc/).
 
 ## CORS
 
@@ -45,3 +46,8 @@ $ heroku buildpacks:add https://codon-buildpacks.s3.amazonaws.com/buildpacks/her
 $ git push heroku master
 $ heroku open
 ```
+
+## References
+
+* [Openspending.nl](http://openspending.nl/)
+

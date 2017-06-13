@@ -1,4 +1,5 @@
 {{#page-header title='Show' description=(concat 'Some more detailed information about ' model.name)}}
+    <h2>{{model.name}}</h2>
     <form>
 
         <div class="form-group row">
@@ -16,13 +17,6 @@
                 </div>
             </div>
         {{/if}}
-
-        <div class="form-group row">
-            <label for="government-name" class="col-2 col-form-label">Name:</label>
-            <div class="col-10">
-                <input title="name" class="form-control" type="text" value={{model.name}} id="government-name" readonly>
-            </div>
-        </div>
 
         {{#if model.country}}
             <div class="form-group row">
@@ -113,4 +107,17 @@
         {{/if}}
     </form>
 
+    <h2>Metrics</h2>
+    {{#if metrics.length}}
+        {{models-table
+            data=metrics
+            columns=columns
+            filteringIgnoreCase=true
+            showColumnsDropdown=false
+            customIcons=customIcons
+            customClasses=customClasses
+            simplePaginationTemplate="components/models-table/simple-pagination"
+
+        }}
+    {{/if}}
 {{/page-header}}

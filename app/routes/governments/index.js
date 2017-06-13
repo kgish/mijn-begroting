@@ -15,7 +15,7 @@ export default Ember.Route.extend({
                 kinds.push(g.kind)
             }
             governments.push({
-                aggregations: g.aggregations,
+                // aggregations: g.aggregations,
                 code: g.code,
                 country: g.country,
                 display_kind: g.display_kind,
