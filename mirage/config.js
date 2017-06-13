@@ -1,5 +1,5 @@
-import config from 'accountability-hack/config/environment';
-import governments from 'accountability-hack/mirage/fixtures/governments';
+import config from 'mijn-begroting/config/environment';
+import governments from 'mijn-begroting/mirage/fixtures/governments';
 
 export default function() {
     let url = `${config.apiHost}/${config.apiNamespace}`,

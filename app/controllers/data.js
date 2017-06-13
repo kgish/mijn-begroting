@@ -1,6 +1,6 @@
 /*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
 import Ember from 'ember';
-import config from 'accountability-hack/config/environment';
+import config from 'mijn-begroting/config/environment';
 
 export default Ember.Controller.extend({
 

@@ -1,4 +1,6 @@
-# Accountability Hack
+# Mijn Begroting
+
+Personalized budgetering application for municipalities.
 
 
 ## CORS
@@ -38,7 +40,7 @@ module.exports = function(environment) {
 ## Heroku
 
 ```
-$ heroku create accountability-hack
+$ heroku create mijn-begroting
 $ heroku buildpacks:add https://codon-buildpacks.s3.amazonaws.com/buildpacks/heroku/emberjs.tgz
 $ git push heroku master
 $ heroku open

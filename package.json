@@ -1,7 +1,7 @@
 {
-  "name": "accountability-hack",
-  "version": "0.0.0",
-  "description": "Small description for accountability-hack goes here",
+  "name": "mijn-begroting",
+  "version": "0.0.2",
+  "description": "Personal budgetering application for municipalities",
   "license": "MIT",
   "author": "",
   "directories": {

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import config from 'accountability-hack/config/environment';
+import config from 'mijn-begroting/config/environment';
 
 export default Ember.Controller.extend({
     appTitle: config.APP.title

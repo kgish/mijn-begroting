@@ -1,4 +1,4 @@
-/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
+/*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
 import Ember from 'ember';
 
 export default Ember.Controller.extend({

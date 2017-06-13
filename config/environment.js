@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
     var ENV = {
-        modulePrefix: 'accountability-hack',
+        modulePrefix: 'mijn-begroting',
         environment: environment,
         rootURL: '/',
         locationType: 'auto',
