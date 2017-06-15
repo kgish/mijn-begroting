@@ -10,9 +10,11 @@ export default Ember.Controller.extend({
 
     columns: [
         { propertyName: "id",     title: "Id" },
-        { propertyName: "factor", title: "Factor", filterWithSelect: true },
+        { propertyName: "factor", title: "Factor" },
         { propertyName: "metric", title: "Metric", filterWithSelect: true },
-        { propertyName: "year",   title: "Year", filterWithSelect: true },
+        { propertyName: "year",   title: "Year", filterWithSelect: true, filterFunction: function(s1, s2) {
+            console.log(s1, s2); return parseInt(s1) === parseInt(s2);
+        } },
         { propertyName: "resource_uri", title: "Resource URI"}
     ],
 

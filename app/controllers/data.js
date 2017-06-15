@@ -70,7 +70,7 @@ export default Ember.Controller.extend({
 
     documents: [],
 
-    disabledDocuments: Ember.computed('loadingDocuments', function(){
+    disabledDocuments: Ember.computed('label', 'loadingDocuments', function(){
         let label = this.get('label'),
             loading = this.get('loadingDocuments'),
             result = (
@@ -81,17 +81,7 @@ export default Ember.Controller.extend({
         return  result ? ' disabled' : '';
     }),
 
-    disabledGovernments: Ember.computed('loadingGovernments', function(){
-        let loading = this.get('loadingGovernments'),
-            result = (
-                loading
-            );
-        console.log('disabledGovernments() => ' + result);
-        return  result ? ' disabled' : '';
-    }),
-
     loadingLabels: false,
-    loadingGovernments: false,
     loadingDocuments: false,
 
     filteredLabels: Ember.computed('label_type', function(){
@@ -168,8 +158,7 @@ export default Ember.Controller.extend({
                 url_docs = apiUrl + '/documents/' +
                 '?government__kind=' + kind +
                 (year ? '&year=' + year : '') +
-                '&period=' + period +
-                '&plan=' + plan +
+                this._format_plan_period(plan, period) +
                 '&direction=' + direction +
                 '&limit=' + limit +
                 '&format=json';
@@ -256,48 +245,6 @@ export default Ember.Controller.extend({
             );
         },
 
-        getGovernments() {
-            let kind = this.get('kind'),
-                apiUrl = this.get('apiUrl'),
-                url_govs = apiUrl + '/governments' +
-                '?kind=' + kind +
-                '&limit=0' +
-                '&format=json';
-            console.log('getGovernments() url_govs='+url_govs);
-            this.set('loadingGovernments', true);
-            Ember.$.get(url_govs).then (
-                data => {
-                    let governments = [];
-                    console.log('url_govs data', data);
-                    data.objects.forEach( gov => {
-                        governments.push({
-                            code: gov.code,
-                            country: gov.country,
-                            display_kind: gov.display_kind,
-                            id: gov.id,
-                            intro: gov.intro,
-                            kind: gov.kind,
-                            lat: gov.lat,
-                            location: gov.location,
-                            lon: gov.lon,
-                            // metrics: gov.metrics,
-                            name: gov.name,
-                            resource_uri: gov.resource_uri,
-                            slug: gov.slug,
-                            state: gov.state,
-                            website: gov.website,
-                        });
-                    });
-                    this.set('governments', governments);
-                    this.set('loadingGovernments', false);
-                },
-                error => {
-                    console.error(error);
-                    this.set('loadingGovernments', false);
-                }
-            );
-        },
-
         getDocuments() {
             let kind = this.get('kind'),
                 year = parseInt(this.get('year')),
@@ -312,8 +259,7 @@ export default Ember.Controller.extend({
                 url_docs = apiUrl + '/documents/' +
                     '?government__kind=' + kind +
                     (year ? '&year=' + year : '') +
-                    '&period=' + period +
-                    '&plan=' + plan +
+                    this._format_plan_period(plan, period) +
                     '&limit=50' +
                     '&format=json',
                 url_entries = apiUrl + '/aggregations/entries/' +
@@ -443,5 +389,10 @@ export default Ember.Controller.extend({
         url += plan2nl[plan] + '/' + year + '-' + period + '/';
         url += direction2nl[direction] + '/' + label.full_url;
         return url;
+    },
+
+    _format_plan_period(plan, period) {
+        if (plan === 'spending' && period === 0) { period = 5; }
+        return '&period=' + period + '&plan=' + plan;
     }
 });

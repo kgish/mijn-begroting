@@ -1,3 +1,10 @@
+# Openspending-listify
+
+This is the code used in the [openspending-listify](https://github.com/openstate/openspending-listify) application which offers some insight into how the API works.
+
+## [js/app.js](https://github.com/openstate/openspending-listify/blob/master/js/app.js)
+
+```javascript
 OpenspendingListify = window.OpenspendingListify || {};
 OpenspendingListify.labels = window.OpenspendingListify.labels || [];
 OpenspendingListify.labels_busy = false;
@@ -304,3 +311,4 @@ OpenspendingListify.prepare_download = function() {
 $(document).ready(function() {
   OpenspendingListify.init();
 });
+```

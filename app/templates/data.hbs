@@ -76,37 +76,9 @@
                     {{/if}}
                     Labels
                 </button>
-                <button class='btn btn-success{{disabledGovernments}}' {{action "getGovernments"}}>
-                    {{#if loadingGovernments}}
-                        {{fa-icon 'spinner' spin=true}}
-                    {{/if}}
-                    Governments
-                </button>
         </div>
 
     </form>
-
-    {{#if governments.length}}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Code</th>
-                    <th>Kind</th>
-                    <th>Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each governments as |g|}}
-                    <tr>
-                        <td>{{g.code}}</td>
-                        <td>{{g.kind}}</td>
-                        <td>{{g.name}}</td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    {{/if}}
-
 
     {{#if labels.length}}
         <form>
