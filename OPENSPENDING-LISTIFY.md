@@ -2,7 +2,81 @@
 
 This is the code used in the [openspending-listify](https://github.com/openstate/openspending-listify) application which offers some insight into how the API works.
 
-## [js/app.js](https://github.com/openstate/openspending-listify/blob/master/js/app.js)
+## API calls
+
+Here is a list of the API calls which are used.
+```
+HOST = http://www.openspending/nl/api/v1
+```
+
+GET /GOVERMENTS
+get_governments()
+
+```
+HOST/governments/?kind=kind&limit=500&format=json
+```
+
+GET /LABELS/:document_id
+
+get_all_labels(document_id, direction)
+
+```
+HOST/labels/?document_id=document_id&limit=500&format=json
+```
+
+GET /DOCUMENTS
+
+get_all_documents()
+
+```
+HOST/documents/?government__kind=' + OpenspendingListify.kind + '&year=' + OpenspendingListify.year + '&period=' + OpenspendingListify.period + '&plan=' + OpenspendingListify.plan + '&limit=500&format=json';
+```
+
+get_sample_document(kind, year, period, plan, direction)
+
+```
+HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=1&format=json
+```
+
+
+## Transaction
+
+A typical transaction looks like this:
+
+Init:
+
+```
+init: $.get('http://www.openspending.nl/api/v1/aggregations/documents/?format=json&limit=0
+get_governments: $.get(http://www.openspending.nl/api/v1/governments/?kind=county&limit=500&format=json)
+get_sample_document: $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2016&period=0&plan=budget&limit=1&format=json)
+init: got aggregated document data!
+get_sample_document: got data
+get_all_labels: $.get(http://www.openspending.nl/api/v1/labels/?document_id=18418&limit=500&format=json)
+get_all_labels: got labels!
+get_governments: got new governments for kind county
+```
+
+Change selection (e.g. year):
+
+```
+Selection property changed from 2017 to 2016
+get_sample_document: $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2016&period=0&plan=budget&limit=1&format=json)
+get_sample_document: got data:
+get_all_labels: $.get(http://www.openspending.nl/api/v1/labels/?document_id=18418&limit=500&format=json)
+get_all_labels: got labels!
+```
+
+Submit form:
+
+```
+form submitted!
+get_all_document: return $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2016&period=0&plan=budget&limit=500&format=json)
+get_aggregated_entries: return $.get(http://www.openspending.nl/api/v1/aggregations/entries/?type=budget&year=2016&period=0&code_main=0&direction=out&limit=1&format=json)
+```
+
+## Code sample
+
+Here is the contents of the [js/app.js](https://github.com/openstate/openspending-listify/blob/master/js/app.js) file:
 
 ```javascript
 OpenspendingListify = window.OpenspendingListify || {};
