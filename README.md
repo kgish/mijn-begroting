@@ -4,6 +4,9 @@ Personalized budgetering application for municipalities.
 
 Uses the [Openspending API](http://openspending.nl/api/v1/doc/).
 
+![](images/screenshot-governments.png)
+
+
 ## CORS
 
 Include the API hostname and COR details in the `config/environment.js` file:
