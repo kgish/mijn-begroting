@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
     size: 10,
 
     years: [],
-    year: 0,
+    year: 2017,
 
     periods: [
         { value: 0, text: 'Year' },
@@ -390,7 +390,7 @@ export default Ember.Controller.extend({
             out: 'lasten'
         };
         let url = "http://www.openspending.nl/" + item.government.slug + '/';
-        url += plan2nl[plan] + '/' + year + '-' + period + '/';
+        url += plan2nl[plan] + '/' + (year || 2017) + '-' + period + '/';
         url += direction2nl[direction] + '/' + label.full_url;
         return url;
     },
