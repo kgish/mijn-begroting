@@ -100,7 +100,7 @@
                     {{#x-select value=label id="label" class="custom-select" action="selectLabel" as |xs|}}
                         {{#xs.option value='Select'}}Select{{/xs.option}}
                         {{#each filteredLabels as |label index|}}
-                            {{#xs.option value=index}}[{{label.code}}] {{label.label}}{{/xs.option}}
+                            {{#xs.option value=index}}{{label.code}} {{label.label}}{{/xs.option}}
                         {{/each}}
                     {{/x-select}}
                 </div>

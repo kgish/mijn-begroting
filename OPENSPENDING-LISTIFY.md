@@ -9,14 +9,18 @@ Here is a list of the API calls which are used.
 HOST = http://www.openspending/nl/api/v1
 ```
 
-GET /GOVERMENTS
+### Governments by kind
+
+GET /governments
 get_governments()
 
 ```
 HOST/governments/?kind=kind&limit=500&format=json
 ```
 
-GET /LABELS/:document_id
+### Labels by document
+
+GET /labels
 
 get_all_labels(document_id, direction)
 
@@ -24,18 +28,32 @@ get_all_labels(document_id, direction)
 HOST/labels/?document_id=document_id&limit=500&format=json
 ```
 
-GET /DOCUMENTS
+
+### Documents
+
+GET /documents
 
 get_all_documents()
 
 ```
-HOST/documents/?government__kind=' + OpenspendingListify.kind + '&year=' + OpenspendingListify.year + '&period=' + OpenspendingListify.period + '&plan=' + OpenspendingListify.plan + '&limit=500&format=json';
+HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=500&format=json
 ```
 
 get_sample_document(kind, year, period, plan, direction)
 
 ```
 HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=1&format=json
+```
+
+
+### Entries
+
+GET /aggregations/entries
+
+get_aggregated_entries(label)
+
+```
+HOST/aggregations/entries/?type=plan&year=year&period=period&code_label.type=label.code&direction=direction&limit=1&format=json
 ```
 
 

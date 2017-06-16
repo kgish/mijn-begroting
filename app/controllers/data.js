@@ -134,9 +134,12 @@ export default Ember.Controller.extend({
             this.set('limit', limit);
             this._showValues();
         },
-        selectLabel(n) {
-            console.log('selectLabel('+n+')');
-            this.set('label', this.get('labels')[n]);
+        selectLabel(index) {
+            let labels = this.get('filteredLabels'),
+                label = labels[index];
+            console.log('selectLabel('+index+') label='+JSON.stringify(label));
+            // console.log('labels='+JSON.stringify(labels));
+            this.set('label', label);
             this._showValues();
         },
         selectLabelType(label_type) {
@@ -152,15 +155,15 @@ export default Ember.Controller.extend({
                 kind = this.get('kind'),
                 plan = this.get('plan'),
                 direction = this.get('direction'),
-                // order = this.get('order'),
-                limit = parseInt(this.get('limit')),
+                //order = this.get('order'),
+                //limit = parseInt(this.get('limit')),
                 apiUrl = this.get('apiUrl'),
                 url_docs = apiUrl + '/documents/' +
                 '?government__kind=' + kind +
                 (year ? '&year=' + year : '') +
                 this._format_plan_period(plan, period) +
                 '&direction=' + direction +
-                '&limit=' + limit +
+                '&limit=1' +
                 '&format=json';
 
             console.log('url_docs', url_docs);
@@ -176,14 +179,14 @@ export default Ember.Controller.extend({
                     Ember.$.get(url_labels).then(
                         data => {
                             console.log('url_labels data', data);
-                            let objs = data.objects.filter(function (l) { return (l.direction === direction);}),
+                            let objs = data.objects.filter(l => { return (l.direction === direction);}),
                                 main2slug = {},
                                 main_functions,
                                 label_types = [],
                                 labels = [];
-                            console.log('url_labels objs', objs);
+                            console.log('url_labels (filter) objs', objs);
 
-                            objs.forEach(function(obj){
+                            objs.forEach(obj => {
                                 if (label_types.indexOf(obj.type) === -1) {
                                    label_types.push(obj.type);
                                 }
@@ -202,34 +205,35 @@ export default Ember.Controller.extend({
                             console.log('url_labels types='+JSON.stringify(label_types));
                             this.set('label_types', label_types);
 
-                            main_functions = labels.filter(function (l) { return l.type === 'main';});
+                            main_functions = labels.filter(label => { return label.type === 'main'; });
                             console.log('url_labels main_functions', main_functions);
-                            for (let idx in main_functions) {
-                                main2slug[main_functions[idx]['code']] = main_functions[idx]['slug'];
-                            }
+                            main_functions.forEach(main_function => {
+                                main2slug[main_function.code] = main_function.slug;
+                            });
 
-                            console.log('url_labels main2slug', main2slug);
+                            console.log('url_labels main2slug='+JSON.stringify(main2slug));
 
-                            Ember.$.each(labels, function (idx, item) {
+                            labels.forEach( label => {
                                 let full_url;
-                                if (item.type === 'main') {
-                                    full_url = 'hoofdfuncties/' + item.slug + '/functies/';
-                                } else if (item.type === 'sub') {
-                                    if (item.code[0] !== 'A') {
-                                        let m2s = main2slug[item.code[0]];
+                                if (label.type === 'main') {
+                                    full_url = 'hoofdfuncties/' + label.slug + '/functies/';
+                                } else if (label.type === 'sub') {
+                                    if (label.code[0] !== 'A') {
+                                        let m2s = main2slug[label.code[0]];
                                         if (m2s) {
-                                            full_url = 'hoofdfuncties/' + m2s + '/functies/' + item.slug + '/categorieen/';
+                                            full_url = 'hoofdfuncties/' + m2s + '/functies/' + label.slug + '/categorieen/';
                                         } else {
-                                            console.error('m2s['+item.code[0]+'] is undefined!');
+                                            console.error('m2s['+label.code[0]+'] is undefined!');
                                         }
                                     }
                                 } else {
-                                  full_url = 'categorieen/' + item.slug + '/hoofdfuncties/';
+                                  full_url = 'categorieen/' + label.slug + '/hoofdfuncties/';
                                 }
 
-                                item.full_url = full_url;
+                                label.full_url = full_url;
                             });
 
+                            labels = labels.filter( label => { return label.code !== ''; });
                             this.set('labels', labels.sortBy('code'));
                         },
                         error => {
