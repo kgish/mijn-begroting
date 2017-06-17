@@ -81,6 +81,8 @@ export default Ember.Controller.extend({
         return  result ? ' disabled' : '';
     }),
 
+    submittedDocuments: false,
+
     loadingLabels: false,
     loadingDocuments: false,
 
@@ -310,11 +312,15 @@ export default Ember.Controller.extend({
                     });
                     console.log('url_docs results='+JSON.stringify(results));
                     this._display_documents(this, results, plan, year, period, direction, label, order, size);
-                    Ember.run.once(this, () => { this.set('loadingDocuments', false)});
+                    Ember.run.once(this, () => {
+                        this.set('loadingDocuments', false);
+                        this.set('submittedDocuments', true)
+                    });
                 },
                 error => {
                     console.error(error);
                     this.set('loadingDocuments', false);
+                    this.set('submittedDocuments', true)
                 }
             );
         }
