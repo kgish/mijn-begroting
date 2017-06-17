@@ -368,14 +368,14 @@ export default Ember.Controller.extend({
 
             if (item.total > 0) {
                 pct = ((item.total / item.factor) * 100.0) / max_total;
+                documents.push({
+                    normalised_total: normalised_total,
+                    total_formatted: total_formatted,
+                    openspending_url: openspending_url,
+                    government_name: government_name,
+                    pct: pct
+                })
             }
-            documents.push({
-                normalised_total: normalised_total,
-                total_formatted: total_formatted,
-                openspending_url: openspending_url,
-                government_name: government_name,
-                pct: pct
-            })
         });
         context.set('documents', documents);
      },
