@@ -119,13 +119,11 @@
 
         {{#if documents.length}}
             <h2>Documents</h2>
-            {{#each documents as |d idx|}}
-                <div class="result row">
-                    <h4><a href="{{d.openspending_url}}" target="_blank">{{add-nums idx 1}}. {{d.government_name}} : {{d.total_formatted}}</a></h4>
-                    <div class="progress">';
-                        <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:{{d.pct}}%">
-                            <span class="sr-only">{{d.pct}}% Complete</span>
-                    </div>
+            {{#each documents as |d index|}}
+                <h4><a href="{{d.openspending_url}}" target="_blank">{{add-nums index 1}}. {{d.government_name}} : {{d.total_formatted}}</a></h4>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width:{{d.pct}}%" aria-valuenow="{{d.pct}}" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">{{d.pct}}% Complete</span>
                     </div>
                 </div>
             {{/each}}

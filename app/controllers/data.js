@@ -12,7 +12,7 @@ export default Ember.Controller.extend({
     size: 10,
 
     years: [],
-    year: 2017,
+    year: '2017',
 
     periods: [
         { value: 0, text: 'Year' },
@@ -42,7 +42,7 @@ export default Ember.Controller.extend({
         { value: 'asc', text: 'Ascending' },
         { value: 'desc', text: 'Descending' },
     ],
-    order: 'asc',
+    order: 'desc',
 
     limits: [
         { value: 1,   text: '1' },
@@ -160,8 +160,8 @@ export default Ember.Controller.extend({
                 apiUrl = this.get('apiUrl'),
                 url_docs = apiUrl + '/documents/' +
                 '?government__kind=' + kind +
-                (year ? '&year=' + year : '') +
-                this._format_plan_period(plan, period) +
+                this._format_url_year(year) +
+                this._format_url_plan_and_period(plan, period) +
                 '&direction=' + direction +
                 '&limit=1' +
                 '&format=json';
@@ -262,13 +262,13 @@ export default Ember.Controller.extend({
                 apiUrl = this.get('apiUrl'),
                 url_docs = apiUrl + '/documents/' +
                     '?government__kind=' + kind +
-                    (year ? '&year=' + year : '') +
-                    this._format_plan_period(plan, period) +
+                    this._format_url_year(year) +
+                    this._format_url_plan_and_period(plan, period) +
                     '&limit=50' +
                     '&format=json',
                 url_entries = apiUrl + '/aggregations/entries/' +
                   '?type=' + plan +
-                  (year ? '&year=' + year : '') +
+                    this._format_url_year(year) +
                   '&period=' + period +
                   '&code_' + label.type + '=' + label.code +
                   '&direction=' + direction +
@@ -395,7 +395,11 @@ export default Ember.Controller.extend({
         return url;
     },
 
-    _format_plan_period(plan, period) {
+    _format_url_year(year) {
+        return year ? '&year=' + year : '';
+    },
+
+    _format_url_plan_and_period(plan, period) {
         if (plan === 'spending' && period === 0) { period = 5; }
         return '&period=' + period + '&plan=' + plan;
     }
