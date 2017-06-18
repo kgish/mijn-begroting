@@ -96,7 +96,7 @@ export default Ember.Controller.extend({
                 filteredLabels.push(label);
             }
         });
-        console.log('filteredLabels return', filteredLabels);
+        console.log('filteredLabels return '+JSON.stringify(filteredLabels));
         return filteredLabels;
     }),
 
@@ -171,20 +171,20 @@ export default Ember.Controller.extend({
             this.set('loadingLabels', true);
             Ember.$.get(url_docs).then (
                 data => {
-                    console.log('url_docs data', data);
+                    console.log('url_docs data='+JSON.stringify(data));
                     let url_labels = apiUrl + '/labels/' +
                         '?document_id=' + data.objects[0].id +
                         '&limit=500';
                     console.log(url_labels);
                     Ember.$.get(url_labels).then(
                         data => {
-                            console.log('url_labels data', data);
+                            console.log('url_labels data='+JSON.stringify(data));
                             let objs = data.objects.filter(l => { return (l.direction === direction);}),
                                 main2slug = {},
                                 main_functions,
                                 label_types = [],
                                 labels = [];
-                            console.log('url_labels (filter) objs', objs);
+                            console.log('url_labels (filter) objs='+JSON.stringify(objs));
 
                             objs.forEach(obj => {
                                 if (label_types.indexOf(obj.type) === -1) {
@@ -202,11 +202,11 @@ export default Ember.Controller.extend({
                             });
 
                             label_types = label_types.sort();
-                            console.log('url_labels types='+JSON.stringify(label_types));
+                            console.log('url_labels label_types='+JSON.stringify(label_types));
                             this.set('label_types', label_types);
 
                             main_functions = labels.filter(label => { return label.type === 'main'; });
-                            console.log('url_labels main_functions', main_functions);
+                            console.log('url_labels main_functions='+JSON.stringify(main_functions));
                             main_functions.forEach(main_function => {
                                 main2slug[main_function.code] = main_function.slug;
                             });
@@ -218,12 +218,13 @@ export default Ember.Controller.extend({
                                 if (label.type === 'main') {
                                     full_url = 'hoofdfuncties/' + label.slug + '/functies/';
                                 } else if (label.type === 'sub') {
-                                    if (label.code[0] !== 'A') {
+                                    // if (label.code[0] !== 'A') {
+                                    if (!label.code.match(/^[0AP]/)) {
                                         let m2s = main2slug[label.code[0]];
                                         if (m2s) {
                                             full_url = 'hoofdfuncties/' + m2s + '/functies/' + label.slug + '/categorieen/';
                                         } else {
-                                            console.error('m2s['+label.code[0]+'] is undefined!');
+                                            console.error('main2slug['+label.code[0]+'] is undefined for label='+JSON.stringify(label));
                                         }
                                     }
                                 } else {
@@ -282,8 +283,8 @@ export default Ember.Controller.extend({
                 Ember.$.get(url_entries),
             ).then(
                 (docs, entries) => {
-                    console.log('url_docs data', docs);
-                    console.log('url_docs entries', entries);
+                    console.log('url_docs data='+JSON.stringify(docs));
+                    console.log('url_docs entries='+JSON.stringify(entries));
 
                     let documents = {};
                     Ember.$.each(docs[0].objects, function (idx, item) {
