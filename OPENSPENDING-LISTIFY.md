@@ -15,7 +15,7 @@ GET /governments
 get_governments()
 
 ```
-HOST/governments/?kind=kind&limit=500&format=json
+HOST/governments/?kind=kind&limit=500
 ```
 
 ### Labels by document
@@ -25,7 +25,7 @@ GET /labels
 get_all_labels(document_id, direction)
 
 ```
-HOST/labels/?document_id=document_id&limit=500&format=json
+HOST/labels/?document_id=document_id&limit=500
 ```
 
 
@@ -36,13 +36,13 @@ GET /documents
 get_all_documents()
 
 ```
-HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=500&format=json
+HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=500
 ```
 
 get_sample_document(kind, year, period, plan, direction)
 
 ```
-HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=1&format=json
+HOST/documents/?government__kind=kind&year=year&period=period&plan=plan&limit=1
 ```
 
 
@@ -53,7 +53,7 @@ GET /aggregations/entries
 get_aggregated_entries(label)
 
 ```
-HOST/aggregations/entries/?type=plan&year=year&period=period&code_label.type=label.code&direction=direction&limit=1&format=json
+HOST/aggregations/entries/?type=plan&year=year&period=period&code_label.type=label.code&direction=direction&limit=1
 ```
 
 
@@ -65,12 +65,12 @@ A typical transaction looks like this:
 
 ```
 hello!
-init() $.get('http://www.openspending.nl/api/v1/aggregations/documents/?format=json&limit=0
-get_governments() $.get(http://www.openspending.nl/api/v1/governments/?kind=county&limit=500&format=json)
-get_sample_document(kind=county,year=2016,period=0,plan=budget,direction=out) $.get(http://www.openspending.nl/api/v1/       documents/?government__kind=county&year=2016&period=0&plan=budget&limit=1&format=json)
+init() $.get('http://www.openspending.nl/api/v1/aggregations/documents/?limit=0
+get_governments() $.get(http://www.openspending.nl/api/v1/governments/?kind=county&limit=500)
+get_sample_document(kind=county,year=2016,period=0,plan=budget,direction=out) $.get(http://www.openspending.nl/api/v1/       documents/?government__kind=county&year=2016&period=0&plan=budget&limit=1)
 init() got aggregated document data!
 get_sample_document(kind=county,year=2016,period=0,plan=budget,direction=out) got data:
-get_all_labels(document_id=18418,direction=out) $.get(http://www.openspending.nl/api/v1/labels/?                         document_id=18418&limit=500&format=json)
+get_all_labels(document_id=18418,direction=out) $.get(http://www.openspending.nl/api/v1/labels/?                         document_id=18418&limit=500)
 get_all_labels(document_id=18418,direction=out) got labels!
 
 ...
@@ -82,9 +82,9 @@ get_governments() got new governments for kind=county
 
 ```
 Selection property changed from 2016 to 2017
-get_sample_document(kind=county,year=2017,period=0,plan=budget,direction=out) $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2017&period=0&plan=budget&limit=1&format=json)
+get_sample_document(kind=county,year=2017,period=0,plan=budget,direction=out) $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2017&period=0&plan=budget&limit=1)
 get_sample_document(kind=county,year=2017,period=0,plan=budget,direction=out) got data:
-get_all_labels(document_id=22420,direction=out) $.get(http://www.openspending.nl/api/v1/labels/?document_id=22420&limit=500&format=json)
+get_all_labels(document_id=22420,direction=out) $.get(http://www.openspending.nl/api/v1/labels/?document_id=22420&limit=500)
 get_all_labels(document_id=22420,direction=out) got labels!
 ```
 
@@ -94,8 +94,8 @@ get_all_labels(document_id=22420,direction=out) got labels!
 ```
 submit() form submitted!
 submit() $.when(get_all_documents(), get_aggregated_entries(label={"code":"0.7","direction":"out","document_id":22420,"label":"Algemene uitkeringen en overige uitkeringen gemeentefonds","resource_uri":"/api/v1/labels/22420-sub-0.7-out/","slug":"algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds","type":"sub","full_url":"hoofdfuncties/undefined/functies/algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds/categorieen/"}))
-get_all_document() return $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2017&period=0&plan=budget&limit=500&format=json)
-get_aggregated_entries(label={"code":"0.7","direction":"out","document_id":22420,"label":"Algemene uitkeringen en overige uitkeringen gemeentefonds","resource_uri":"/api/v1/labels/22420-sub-0.7-out/","slug":"algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds","type":"sub","full_url":"hoofdfuncties/undefined/functies/algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds/categorieen/"})return $.get(http://www.openspending.nl/api/v1/aggregations/entries/?type=budget&year=2017&period=0&code_sub=0.7&direction=out&limit=1&format=json)
+get_all_document() return $.get(http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2017&period=0&plan=budget&limit=500)
+get_aggregated_entries(label={"code":"0.7","direction":"out","document_id":22420,"label":"Algemene uitkeringen en overige uitkeringen gemeentefonds","resource_uri":"/api/v1/labels/22420-sub-0.7-out/","slug":"algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds","type":"sub","full_url":"hoofdfuncties/undefined/functies/algemene-uitkeringen-en-overige-uitkeringen-gemeentefonds/categorieen/"})return $.get(http://www.openspending.nl/api/v1/aggregations/entries/?type=budget&year=2017&period=0&code_sub=0.7&direction=out&limit=1)
 
 ...
  
@@ -134,7 +134,7 @@ OpenspendingListify.get_governments = function() {
 
   OpenspendingListify.governments_busy = true;
 
-  var governments_url = 'http://www.openspending.nl/api/v1/governments/?kind=' + OpenspendingListify.kind + '&limit=500&format=json';
+  var governments_url = 'http://www.openspending.nl/api/v1/governments/?kind=' + OpenspendingListify.kind + '&limit=500';
   console.log(fn+"$.get("+governments_url+")");
   $.get(governments_url, function (data) {
     OpenspendingListify.governments_busy = false;
@@ -147,8 +147,8 @@ OpenspendingListify.get_governments = function() {
 OpenspendingListify.init = function() {
     var fn = 'init() ';
   console.log('hello!');
-  console.log(fn+"$.get('http://www.openspending.nl/api/v1/aggregations/documents/?format=json&limit=0");
-  $.get('http://www.openspending.nl/api/v1/aggregations/documents/?format=json&limit=0', function (data) {
+  console.log(fn+"$.get('http://www.openspending.nl/api/v1/aggregations/documents/?limit=0");
+  $.get('http://www.openspending.nl/api/v1/aggregations/documents/?limit=0', function (data) {
     console.log(fn+'got aggregated document data!');
     OpenspendingListify.years = data.facets.years.terms.map(function (t) {
       return parseInt(t.term);
@@ -248,7 +248,7 @@ OpenspendingListify.make_full_urls_for_labels = function() {
 OpenspendingListify.get_all_labels = function(document_id, direction) {
   // get all the labels :)
   var fn = 'get_all_labels(document_id='+document_id+',direction='+direction+') ';
-  var labels_url = 'http://www.openspending.nl/api/v1/labels/?document_id=' + document_id + '&limit=500&format=json';
+  var labels_url = 'http://www.openspending.nl/api/v1/labels/?document_id=' + document_id + '&limit=500';
   console.log(fn+"$.get("+labels_url+")");
   $.get(labels_url, function (data) {
     console.log(fn+'got labels!');
@@ -265,7 +265,7 @@ OpenspendingListify.get_sample_document = function(kind, year, period, plan, dir
     return;
   }
 
-  var docs_url = 'http://www.openspending.nl/api/v1/documents/?government__kind=' + kind + '&year=' + year + '&period=' + period + '&plan=' + plan + '&limit=1&format=json';
+  var docs_url = 'http://www.openspending.nl/api/v1/documents/?government__kind=' + kind + '&year=' + year + '&period=' + period + '&plan=' + plan + '&limit=1';
   OpenspendingListify.labels_busy = true;
   console.log(fn+"$.get("+docs_url+")");
   $.get(docs_url, function (data) {
@@ -285,7 +285,7 @@ OpenspendingListify.get_sample_document = function(kind, year, period, plan, dir
 
 OpenspendingListify.get_all_documents = function() {
   var fn = 'get_all_document() ';
-  var docs_url = 'http://www.openspending.nl/api/v1/documents/?government__kind=' + OpenspendingListify.kind + '&year=' + OpenspendingListify.year + '&period=' + OpenspendingListify.period + '&plan=' + OpenspendingListify.plan + '&limit=500&format=json';
+  var docs_url = 'http://www.openspending.nl/api/v1/documents/?government__kind=' + OpenspendingListify.kind + '&year=' + OpenspendingListify.year + '&period=' + OpenspendingListify.period + '&plan=' + OpenspendingListify.plan + '&limit=500';
 
   console.log(fn+"return $.get("+docs_url+")");
   return $.get(docs_url);
@@ -293,16 +293,16 @@ OpenspendingListify.get_all_documents = function() {
 
 OpenspendingListify.get_aggregated_entries = function(label) {
   var fn = 'get_aggregated_entries(label='+JSON.stringify(label)+')';
-  // http://www.openspending.nl/api/v1/aggregations/entries/?type=spending&code_main=1&period=5&year=2012&direction=out&format=json
+  // http://www.openspending.nl/api/v1/aggregations/entries/?type=spending&code_main=1&period=5&year=2012&direction=out
   var url = 'http://www.openspending.nl/api/v1/aggregations/entries/?type=' + OpenspendingListify.plan + '&year=' + OpenspendingListify.year;
-  url = url + '&period=' + OpenspendingListify.period + '&code_' + label.type + '=' + label.code + '&direction=' + OpenspendingListify.direction + '&limit=1&format=json';
+  url = url + '&period=' + OpenspendingListify.period + '&code_' + label.type + '=' + label.code + '&direction=' + OpenspendingListify.direction + '&limit=1';
   console.log(fn+"return $.get("+url+")");
   return $.get(url);
 };
 
 OpenspendingListify.submit = function() {
   var fn = 'submit() ';
- // http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2014&period=5&plan=spending&format=json
+ // http://www.openspending.nl/api/v1/documents/?government__kind=county&year=2014&period=5&plan=spending
   console.log(fn+'form submitted!');
 
   $('#status').empty();

@@ -23,7 +23,7 @@ export default Ember.Controller.extend({
 
         },
         getDocuments() {
-            // url_docs http://www.openspending.nl/api/v1/documents/?government__kind=county&period=0&plan=budget&direction=in&limit=10&format=json
+            // url_docs http://www.openspending.nl/api/v1/documents/?government__kind=county&period=0&plan=budget&direction=in&limit=10
         }
     }
 });

@@ -3,7 +3,7 @@ import config from 'mijn-begroting/config/environment';
 
 export default Ember.Route.extend({
     model() {
-        let url = `${config.apiHost}/${config.apiNamespace}/governments?limit=0&format=json`;
+        let url = `${config.apiHost}/${config.apiNamespace}/governments?limit=0`;
         return Ember.$.get(url);
     },
 

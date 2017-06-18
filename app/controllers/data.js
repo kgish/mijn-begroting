@@ -165,8 +165,7 @@ export default Ember.Controller.extend({
                 this._format_url_year(year) +
                 this._format_url_plan_and_period(plan, period) +
                 '&direction=' + direction +
-                '&limit=1' +
-                '&format=json';
+                '&limit=1';
 
             console.log('url_docs', url_docs);
             this.set('loadingLabels', true);
@@ -175,8 +174,7 @@ export default Ember.Controller.extend({
                     console.log('url_docs data', data);
                     let url_labels = apiUrl + '/labels/' +
                         '?document_id=' + data.objects[0].id +
-                        '&limit=500' +
-                        '&format=json';
+                        '&limit=500';
                     console.log(url_labels);
                     Ember.$.get(url_labels).then(
                         data => {
@@ -266,16 +264,14 @@ export default Ember.Controller.extend({
                     '?government__kind=' + kind +
                     this._format_url_year(year) +
                     this._format_url_plan_and_period(plan, period) +
-                    '&limit=50' +
-                    '&format=json',
+                    '&limit=50',
                 url_entries = apiUrl + '/aggregations/entries/' +
                   '?type=' + plan +
                     this._format_url_year(year) +
                   '&period=' + period +
                   '&code_' + label.type + '=' + label.code +
                   '&direction=' + direction +
-                  '&limit=1' +
-                '&format=json';
+                  '&limit=1';
 
             console.log('getDocuments() url_docs='+url_docs);
             console.log('getDocuments() url_entries='+url_entries);

@@ -12,9 +12,5 @@ module.exports = function(defaults) {
 
     app.import('vendor/javascripts/accounting.js');
 
-    app.import('vendor/javascripts/range-slider.js');
-    //app.import('vendor/javascripts/slider.js');
-    app.import('vendor/css/range-slider.css');
-
   return app.toTree();
 };
