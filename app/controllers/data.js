@@ -160,7 +160,7 @@ export default Ember.Controller.extend({
                 //order = this.get('order'),
                 //limit = parseInt(this.get('limit')),
                 apiUrl = this.get('apiUrl'),
-                url_docs = apiUrl + '/documents/' +
+                url_docs = apiUrl + '/documents' +
                 '?government__kind=' + kind +
                 this._format_url_year(year) +
                 this._format_url_plan_and_period(plan, period) +
@@ -172,7 +172,7 @@ export default Ember.Controller.extend({
             Ember.$.get(url_docs).then (
                 data => {
                     console.log('url_docs data='+JSON.stringify(data));
-                    let url_labels = apiUrl + '/labels/' +
+                    let url_labels = apiUrl + '/labels' +
                         '?document_id=' + data.objects[0].id +
                         '&limit=500';
                     console.log(url_labels);
@@ -261,12 +261,12 @@ export default Ember.Controller.extend({
                 order = this.get('order'),
                 size = parseInt(this.get('size')),
                 apiUrl = this.get('apiUrl'),
-                url_docs = apiUrl + '/documents/' +
+                url_docs = apiUrl + '/documents' +
                     '?government__kind=' + kind +
                     this._format_url_year(year) +
                     this._format_url_plan_and_period(plan, period) +
-                    '&limit=50',
-                url_entries = apiUrl + '/aggregations/entries/' +
+                    '&limit=500',
+                url_entries = apiUrl + '/aggregations/entries' +
                   '?type=' + plan +
                     this._format_url_year(year) +
                   '&period=' + period +
@@ -283,19 +283,22 @@ export default Ember.Controller.extend({
                 Ember.$.get(url_entries),
             ).then(
                 (docs, entries) => {
-                    console.log('url_docs data='+JSON.stringify(docs));
-                    console.log('url_docs entries='+JSON.stringify(entries));
+                    //console.log('url_docs data='+JSON.stringify(docs));
+                    //console.log('url_docs entries='+JSON.stringify(entries));
+                    console.log('url_docs #docs='+docs.length);
+                    console.log('url_docs #entries='+entries.length);
 
                     let documents = {};
-                    Ember.$.each(docs[0].objects, function (idx, item) {
-                        documents[item.id] = item;
+                    docs[0].objects.forEach(doc => {
+                        documents[doc.id] = doc;
                     });
-                    console.log('url_docs documents='+JSON.stringify(documents));
+                    //console.log('url_docs documents='+JSON.stringify(documents));
 
                     let results = [],
                         terms = entries[0].facets.document.terms;
-                        console.log('# terms='+terms.length);
-                        Ember.$.each(terms, (idx, t) => {
+                    //console.log('facets='+JSON.stringify(entries[0].facets));
+                    console.log('# terms='+terms.length);
+                    terms.forEach(t => {
                         if (typeof(documents[t.term]) !== 'undefined') {
                             let h = {
                                 document: documents[t.term],
@@ -307,7 +310,8 @@ export default Ember.Controller.extend({
                             results.push(h);
                         }
                     });
-                    console.log('url_docs results='+JSON.stringify(results));
+                    //console.log('url_docs results='+JSON.stringify(results));
+                    console.log('url_docs #results='+results.length);
                     this._display_documents(this, results, plan, year, period, direction, label, order, size);
                     Ember.run.once(this, () => {
                         this.set('loadingDocuments', false);
@@ -362,7 +366,8 @@ export default Ember.Controller.extend({
             sorted_results = sorted_results.reverse();
         }
 
-        Ember.$.each(sorted_results.slice(0, size), (idx, item) => {
+        sorted_results = sorted_results.slice(0, size);
+        sorted_results.forEach(item => {
             let normalised_total = item.total / (item.factor * 1.0),
                 total_formatted = accounting.formatMoney(normalised_total, "€", 2, ".", ","),
                 openspending_url = context._get_url_for_item(item, plan, year, period, direction, label),
