@@ -7,6 +7,13 @@ Uses the [Openspending API](http://openspending.nl/api/v1/doc/).
 ![](images/screenshot-governments.png)
 
 
+##
+
+```
+http://openspending.nl:80/api/v1/documents/?plan=budget&government__kind=county&government__name=Almelo&year=2016&period=0
+
+```
+
 ## CORS
 
 Include the API hostname and COR details in the `config/environment.js` file:

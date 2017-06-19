@@ -107,7 +107,7 @@ submit() get_aggregated_entries
 
 ## Code sample
 
-Here is the contents of the [js/app.js](https://github.com/openstate/openspending-listify/blob/master/js/app.js) file, which I adapted slightly in order to log more information:
+Using the [Openspending Listify](https://github.com/openstate/openspending-listify) repository as a good starting point, here is the contents of the [js/app.js](https://github.com/openstate/openspending-listify/blob/master/js/app.js) file, which I adapted slightly in order to log more information for better insights:
 
 ```javascript
 OpenspendingListify = window.OpenspendingListify || {};

@@ -6,7 +6,7 @@ export default Ember.Controller.extend({
     customIcons: Ember.computed.alias('modelsTableCustom.customIcons'),
     customClasses: Ember.computed.alias('modelsTableCustom.customClasses'),
 
-    metrics: Ember.computed.alias('model.metrics'),
+    metrics: [],
 
     columns: [
         { propertyName: "id",     title: "Id" },
@@ -19,8 +19,8 @@ export default Ember.Controller.extend({
     ],
 
     actions: {
-        getMetrics() {
-
+        showMetrics(b) {
+            this.set('metrics', b ? this.get('model.metrics') : []);
         },
         getDocuments() {
             // url_docs http://www.openspending.nl/api/v1/documents/?government__kind=county&period=0&plan=budget&direction=in&limit=10

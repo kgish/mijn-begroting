@@ -107,8 +107,8 @@
         {{/if}}
     </form>
 
-    <h2>Metrics</h2>
     {{#if metrics.length}}
+        <h2>Metrics <a href="#" class="btn btn-success" {{action 'showMetrics' false}}>Hide</a></h2>
         {{models-table
             data=metrics
             columns=columns
@@ -119,5 +119,7 @@
             simplePaginationTemplate="components/models-table/simple-pagination"
 
         }}
+    {{else}}
+        <a href="#" class="btn btn-success" {{action 'showMetrics' true}}>Show metrics</a>
     {{/if}}
 {{/page-header}}
