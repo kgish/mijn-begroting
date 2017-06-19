@@ -118,12 +118,13 @@
         </form>
 
         {{#if submittedDocuments }}
+
             <h2>Documents</h2>
             {{#if documents.length}}
                 {{#each documents as |d index|}}
                     <h4><a href="{{d.openspending_url}}" target="_blank">{{add-nums index 1}}. {{d.government_name}} : {{d.total_formatted}}</a></h4>
                     <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{safe-width d.pct}} aria-valuenow="{{d.pct}}" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" role="progressbar" style="{{safe-width d.pct}}" aria-valuenow="{{d.pct}}" aria-valuemin="0" aria-valuemax="100">
                             <span class="sr-only">{{d.pct}}% Complete</span>
                         </div>
                     </div>
@@ -131,6 +132,24 @@
             {{else}}
                 <p>No documents found.</p>
             {{/if}}
+
+            <h2>Results</h2>
+            {{#if results.length}}
+                <p>Found {{results.length}} results.</p>
+                {{models-table
+                    data=results
+                    columns=columns
+                    filteringIgnoreCase=true
+                    showColumnsDropdown=false
+                    customIcons=customIcons
+                    customClasses=customClasses
+                    simplePaginationTemplate="components/models-table/simple-pagination"
+
+                }}
+            {{else}}
+                <p>No results found.</p>
+            {{/if}}
+
         {{/if}}
 
     {{/if}}

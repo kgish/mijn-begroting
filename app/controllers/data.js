@@ -4,6 +4,15 @@ import config from 'mijn-begroting/config/environment';
 
 export default Ember.Controller.extend({
 
+    modelsTableCustom: Ember.inject.service(),
+    customIcons: Ember.computed.alias('modelsTableCustom.customIcons'),
+    customClasses: Ember.computed.alias('modelsTableCustom.customClasses'),
+
+    columns: [
+        { propertyName: "government.name", title: "Name" },
+        { propertyName: "total", title: "Total" }
+    ],
+
     apiUrl: Ember.computed('apiHost', 'apiNamespace', function(){
        return `${config.apiHost}/${config.apiNamespace}`;
     }),
@@ -85,6 +94,8 @@ export default Ember.Controller.extend({
 
     loadingLabels: false,
     loadingDocuments: false,
+
+    results: [],
 
     filteredLabels: Ember.computed('label_type', function(){
         let label_type = this.get('label_type'),
@@ -300,9 +311,13 @@ export default Ember.Controller.extend({
                     console.log('# terms='+terms.length);
                     terms.forEach(t => {
                         if (typeof(documents[t.term]) !== 'undefined') {
-                            let h = {
-                                document: documents[t.term],
-                                government: documents[t.term].government,
+                            let document = documents[t.term],
+                                government = documents[t.term].government,
+                                h = {
+                                document: document,
+                                document_json: JSON.stringify(document),
+                                government: government,
+                                government_json: JSON.stringify(government),
                                 total: t.total,
                                 factor: this._get_metric_for(documents[t.term].government, normalisation, year)
                             };
@@ -313,6 +328,7 @@ export default Ember.Controller.extend({
                     //console.log('url_docs results='+JSON.stringify(results));
                     console.log('url_docs #results='+results.length);
                     this._display_documents(this, results, plan, year, period, direction, label, order, size);
+                    this.set('results', results);
                     Ember.run.once(this, () => {
                         this.set('loadingDocuments', false);
                         this.set('submittedDocuments', true)
