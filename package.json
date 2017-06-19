@@ -19,6 +19,7 @@
     "ember-ajax": "^3.0.0",
     "ember-body-class": "^0.4.0",
     "ember-cli": "2.13.1",
+    "ember-cli-accounting": "^2.0.1",
     "ember-cli-active-link-wrapper": "^0.3.2",
     "ember-cli-app-version": "^3.0.0",
     "ember-cli-babel": "^6.0.0",

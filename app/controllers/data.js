@@ -106,7 +106,7 @@ export default Ember.Controller.extend({
                 filteredLabels.push(label);
             }
         });
-        console.log('filteredLabels return '+JSON.stringify(filteredLabels));
+        //console.log('filteredLabels return '+JSON.stringify(filteredLabels));
         return filteredLabels;
     }),
 
@@ -181,20 +181,20 @@ export default Ember.Controller.extend({
             this.set('loadingLabels', true);
             Ember.$.get(url_docs).then (
                 data => {
-                    console.log('url_docs data='+JSON.stringify(data));
+                    //console.log('url_docs data='+JSON.stringify(data));
                     let url_labels = apiUrl + '/labels' +
                         '?document_id=' + data.objects[0].id +
                         '&limit=500';
                     console.log(url_labels);
                     Ember.$.get(url_labels).then(
                         data => {
-                            console.log('url_labels data='+JSON.stringify(data));
+                            //console.log('url_labels data='+JSON.stringify(data));
                             let objs = data.objects.filter(l => { return (l.direction === direction);}),
                                 main2slug = {},
                                 main_functions,
                                 label_types = [],
                                 labels = [];
-                            console.log('url_labels (filter) objs='+JSON.stringify(objs));
+                            //console.log('url_labels (filter) objs='+JSON.stringify(objs));
 
                             objs.forEach(obj => {
                                 if (label_types.indexOf(obj.type) === -1) {
@@ -386,7 +386,6 @@ export default Ember.Controller.extend({
         }
         sorted_results.forEach(item => {
             let normalised_total = item.total / (item.factor * 1.0),
-                total_formatted = accounting.formatMoney(normalised_total, "€", 2, ".", ","),
                 openspending_url = context._get_url_for_item(item, plan, year, period, direction, label),
                 government_name = item.government.name,
                 pct = 0;
@@ -395,7 +394,6 @@ export default Ember.Controller.extend({
                 pct = ((item.total / item.factor) * 100.0) / max_total;
                 documents.push({
                     normalised_total: normalised_total,
-                    total_formatted: total_formatted,
                     openspending_url: openspending_url,
                     government_name: government_name,
                     pct: pct

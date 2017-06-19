@@ -6,9 +6,10 @@ export default Ember.Controller.extend({
     customIcons: Ember.computed.alias('modelsTableCustom.customIcons'),
     customClasses: Ember.computed.alias('modelsTableCustom.customClasses'),
 
+    budget: [],
     metrics: [],
 
-    columns: [
+    columnsMetrics: [
         { propertyName: "id",     title: "Id" },
         { propertyName: "factor", title: "Factor" },
         { propertyName: "metric", title: "Metric", filterWithSelect: true },
@@ -19,11 +20,12 @@ export default Ember.Controller.extend({
     ],
 
     actions: {
+        getBudget(b) {
+            this.set('budget', b ? this.get('model.budget') : []);
+            //http://openspending.nl/api/v1/aggregations/main/?direction=out&period=0&gov_code=1680&year=2017
+        },
         showMetrics(b) {
             this.set('metrics', b ? this.get('model.metrics') : []);
-        },
-        getDocuments() {
-            // url_docs http://www.openspending.nl/api/v1/documents/?government__kind=county&period=0&plan=budget&direction=in&limit=10
         }
     }
 });

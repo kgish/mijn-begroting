@@ -14,7 +14,6 @@ module.exports = {
   rules: {
   },
     globals: {
-    server: true,
-      accounting: true
+        server: true
     }
 };
