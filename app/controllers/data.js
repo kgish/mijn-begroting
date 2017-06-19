@@ -18,7 +18,6 @@ export default Ember.Controller.extend({
     }),
 
     normalisation: 'currency',
-    size: 10,
 
     years: [],
     year: '2017',
@@ -270,7 +269,7 @@ export default Ember.Controller.extend({
                 direction = this.get('direction'),
                 normalisation = this.get('normalisation'),
                 order = this.get('order'),
-                size = parseInt(this.get('size')),
+                limit = parseInt(this.get('limit')),
                 apiUrl = this.get('apiUrl'),
                 url_docs = apiUrl + '/documents' +
                     '?government__kind=' + kind +
@@ -327,7 +326,7 @@ export default Ember.Controller.extend({
                     });
                     //console.log('url_docs results='+JSON.stringify(results));
                     console.log('url_docs #results='+results.length);
-                    this._display_documents(this, results, plan, year, period, direction, label, order, size);
+                    this._display_documents(this, results, plan, year, period, direction, label, order, limit);
                     this.set('results', results);
                     Ember.run.once(this, () => {
                         this.set('loadingDocuments', false);
@@ -373,7 +372,7 @@ export default Ember.Controller.extend({
         return filtered_results[0].factor;
     },
 
-     _display_documents(context, results, plan, year, period, direction, label, order, size) {
+     _display_documents(context, results, plan, year, period, direction, label, order, limit) {
         let max_total = Math.max.apply(null, results.map(function (r) { return (r.total / r.factor); })),
             sorted_results = results.sort(function (a,b) { return ((b.total / (b.factor * 1.0)) - (a.total / (a.factor * 1.0))); }),
             documents = [];
@@ -382,7 +381,9 @@ export default Ember.Controller.extend({
             sorted_results = sorted_results.reverse();
         }
 
-        sorted_results = sorted_results.slice(0, size);
+        if (limit) {
+            sorted_results = sorted_results.slice(0, limit);
+        }
         sorted_results.forEach(item => {
             let normalised_total = item.total / (item.factor * 1.0),
                 total_formatted = accounting.formatMoney(normalised_total, "€", 2, ".", ","),
