@@ -6,22 +6,33 @@ export default Ember.Controller.extend({
     customIcons: Ember.computed.alias('modelsTableCustom.customIcons'),
     customClasses: Ember.computed.alias('modelsTableCustom.customClasses'),
 
-    budget: [],
     metrics: [],
+
+    terms: [],
+    showTerms: false,
 
     columnsMetrics: [
         { propertyName: "id",     title: "Id" },
         { propertyName: "factor", title: "Factor" },
         { propertyName: "metric", title: "Metric", filterWithSelect: true },
-        { propertyName: "year",   title: "Year", filterWithSelect: true, filterFunction: function(s1, s2) {
-            return parseInt(s1) === parseInt(s2);
-        } },
+        { propertyName: "year",   title: "Year", filterWithSelect: true },
         { propertyName: "resource_uri", title: "Resource URI"}
     ],
 
+    columnsTerms: [
+        { propertyName: "count",     title: "Count" },
+        { propertyName: "min", title: "Min" },
+        { propertyName: "max", title: "Max" },
+        { propertyName: "mean", title: "Mean" },
+        { propertyName: "term",   title: "Term" },
+        { propertyName: "term_name", title: "Name" },
+        { propertyName: "total", title: "Total"},
+        { propertyName: "total_count", title: "Total count"}
+    ],
+
     actions: {
-        getBudget(b) {
-            this.set('budget', b ? this.get('model.budget') : []);
+        showTerms(b) {
+            this.set('showTerms', b);
             //http://openspending.nl/api/v1/aggregations/main/?direction=out&period=0&gov_code=1680&year=2017
         },
         showMetrics(b) {

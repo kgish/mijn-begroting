@@ -107,6 +107,21 @@
         {{/if}}
     </form>
 
+    {{#if showTerms}}
+        <h2>Terms <a href="#" class="btn btn-success" {{action 'showTerms' false}}>Hide</a></h2>
+        {{models-table
+            data=terms
+            columns=columnsTerms
+            filteringIgnoreCase=true
+            showColumnsDropdown=false
+            customIcons=customIcons
+            customClasses=customClasses
+            simplePaginationTemplate="components/models-table/simple-pagination"
+        }}
+    {{else}}
+        <a href="#" class="btn btn-success" {{action 'showTerms' true}}>Show terms</a>
+    {{/if}}
+
     {{#if metrics.length}}
         <h2>Metrics <a href="#" class="btn btn-success" {{action 'showMetrics' false}}>Hide</a></h2>
         {{models-table
@@ -117,9 +132,9 @@
             customIcons=customIcons
             customClasses=customClasses
             simplePaginationTemplate="components/models-table/simple-pagination"
-
         }}
     {{else}}
         <a href="#" class="btn btn-success" {{action 'showMetrics' true}}>Show metrics</a>
     {{/if}}
+
 {{/page-header}}

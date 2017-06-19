@@ -1,4 +1,4 @@
-/*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
+/*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
@@ -125,7 +125,7 @@ export default Ember.Controller.extend({
             this.set('kind', kind);
         },
         showRecord(record) {
-            console.log(record);
+            //console.log(record);
             this.transitionToRoute('governments.show', record.id);
         }
     }
