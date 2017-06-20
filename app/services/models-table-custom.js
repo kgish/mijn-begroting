@@ -37,6 +37,7 @@ export default Ember.Service.extend({
         // "thead": "",
         // "input": "form-control",
         // "clearFilterIcon": "glyphicon glyphicon-remove-sign form-control-feedback",
+        "clearFilterIcon": "",
         // "clearAllFiltersIcon": "glyphicon glyphicon-remove-circle",
         // "globalFilterDropdownWrapper": ""
     },

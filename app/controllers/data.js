@@ -62,13 +62,13 @@ export default Ember.Controller.extend({
     ],
     limit: 10,
 
-    disabledLabels: Ember.computed('label', 'loadingLabels', function(){
+    disabledLabels: Ember.computed('loadingLabels', function(){
         let loading = this.get('loadingLabels'),
             result = (
                 loading
             );
         console.log('disabled() => ' + result);
-       return  result ? ' disabled' : '';
+        return  result ? ' disabled' : '';
     }),
 
     labels: [],
