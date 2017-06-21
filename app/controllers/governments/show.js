@@ -77,7 +77,35 @@ export default Ember.Controller.extend({
     }),
     loadingTerms: false,
 
-    mainNames: ['bestuur-en-ondersteuning', 'veiligheid', 'verkeer-vervoer-en-waterstaat', 'economie', 'onderwijs','sport-cultuur-en-recreatie', 'sociaal-domein', 'volksgezondheid-en-milieu', 'volkshuisvesting-ruimtelijke-ordening-en-stedelijke-vernieuwing'],
+    mainNames: ['bestuur-en-ondersteuning', 'veiligheid', 'verkeer-vervoer-en-waterstaat', 'economie', 'onderwijs','sport-cultuur-en-recreatie', 'sociaal-domein', 'volksgezondheid-en-milieu', 'volkshuisvesting-ruimtelijke-ordening-enz'],
+
+    title: Ember.computed('model', function(){
+        return this.get('model.name');
+    }),
+
+    subtitle: Ember.computed('year', 'period', 'direction', function(){
+        let year = this.get('year'),
+            period = this.get('period'),
+            direction = this.get('direction'),
+            periods = ['Whole year', '1st quarter', '2nd quarter', '3rd quarter', '4th quarter', 'Whole year'];
+        return `${year} | ${periods[period]} | ${direction}`
+    }),
+
+    segments: Ember.computed('terms', function(){
+        let terms = this.get('terms'),
+            total_terms = this.get('totalTerms'),
+            segments = [];
+
+        terms.forEach(term => {
+           segments.push({
+               label: term.term_name,
+               value: term.total,
+               percentage: (100*term.total/total_terms)
+           })
+        });
+
+        return segments;
+    }),
 
     actions: {
         reset() {
@@ -157,6 +185,14 @@ export default Ember.Controller.extend({
         },
         selectDirection(direction) {
             this.set('direction', direction);
+        },
+        updateSlider(id) {
+            let slider = Ember.$('#slider-'+id);
+            if (slider.length) {
+                //console.log(slider);
+            } else {
+               console.error('unknown slider id='+id);
+            }
         }
     }
 });

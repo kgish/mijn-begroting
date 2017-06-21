@@ -1,6 +1,8 @@
 module.exports = {
   globals: {
     server: true,
+    d3: true,
+    d3pie: true
   },
   root: true,
   parserOptions: {
@@ -12,8 +14,5 @@ module.exports = {
     browser: true
   },
   rules: {
-  },
-    globals: {
-        server: true
-    }
+  }
 };

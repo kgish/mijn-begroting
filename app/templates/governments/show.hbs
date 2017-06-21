@@ -63,18 +63,9 @@
 
         {{#if model.lat}}
             <div class="form-group row">
-                <label for="government-lat" class="col-2 col-form-label">Latitude:</label>
+                <label for="government-latlong" class="col-2 col-form-label">Lat/long:</label>
                 <div class="col-10">
-                    <input title="latitude" class="form-control" type="text" value={{model.lat}} id="government-lat" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.lon}}
-            <div class="form-group row">
-                <label for="government-lon" class="col-2 col-form-label">Longitude:</label>
-                <div class="col-10">
-                    <input title="longitude" class="form-control" type="text" value={{model.lon}} id="government-lon" readonly>
+                    <input title="latlong" class="form-control" type="text" value={{format-latlong model.lat model.lon}} id="government-latlong" readonly>
                 </div>
             </div>
         {{/if}}
@@ -111,6 +102,30 @@
 
     {{#if showTerms}}
         <h2>Terms <a href="#" class="btn btn-success" {{action 'showTerms' false}}>Hide</a></h2>
+
+        <div class="row">
+            <div class="col-md-6 piechart-sliders">
+                {{#each segments as |segment index|}}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>{{segment.label}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            {{x-range-input id=(concat 'slider-' index) value=segment.percentage action=(action 'updateSlider' index)}}
+                            <span id="slider-value-{{index}}">{{format-percentage segment.percentage}}</span>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="col-md-6">
+                {{d3-piechart
+                    title=title
+                    subtitle=subtitle
+                    segments=segments
+                }}
+            </div>
+        </div>
+
         <form class="form-inline">
             <label for="total">Total:</label>
             <input title="year" class="form-control" type="text" value={{format-money totalTerms symbol="€" precision=2 thousand="." decimal="," format="%s %v"}} id="total" readonly>
@@ -143,6 +158,7 @@
             Show
             </a>
         </h2>
+
         <form class="form-inline">
             <label for="year">Year:</label>
             {{#x-select value=year id="year" class="form-control" action="selectYear" as |xs|}}
