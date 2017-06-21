@@ -187,9 +187,12 @@ export default Ember.Controller.extend({
             this.set('direction', direction);
         },
         updateSlider(id) {
-            let slider = Ember.$('#slider-'+id);
-            if (slider.length) {
-                //console.log(slider);
+            let slider_value = Ember.$('#slider-value-'+id);
+            if (slider_value.length) {
+                Ember.run.later(this, () => {
+                    let percentage = parseInt(slider_value.text());
+                    console.log(percentage);
+                }, 500)
             } else {
                console.error('unknown slider id='+id);
             }
