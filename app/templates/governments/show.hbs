@@ -110,9 +110,11 @@
                         <div class="col-md-6">
                             <p>{{segment.label}}</p>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-1">
+                            <p><span id="slider-value-{{index}}">{{format-percentage segment.percentage}}</span></p>
+                        </div>
+                        <div class="col-md-5">
                             {{x-range-input id=(concat 'slider-' index) value=segment.percentage action=(action 'updateSlider' index)}}
-                            <span id="slider-value-{{index}}">{{format-percentage segment.percentage}}</span>
                         </div>
                     </div>
                 {{/each}}
@@ -125,21 +127,6 @@
                 }}
             </div>
         </div>
-
-        <form class="form-inline">
-            <label for="total">Total:</label>
-            <input title="year" class="form-control" type="text" value={{format-money totalTerms symbol="€" precision=2 thousand="." decimal="," format="%s %v"}} id="total" readonly>
-        </form>
-        <form class="form-inline">
-            <label for="year">Year:</label>
-            <input title="year" class="form-control" type="text" value={{year}} id="year" readonly>
-
-            <label for="period">Period:</label>
-            <input title="period" class="form-control" type="text" value={{periodText}} id="period" readonly>
-
-            <label for="direction">Direction:</label>
-            <input title="direction" class="form-control" type="text" value={{capitalize-words direction}} id="direction" readonly>
-        </form>
 
         {{models-table
             data=terms

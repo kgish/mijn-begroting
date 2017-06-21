@@ -1,6 +1,7 @@
 module.exports = {
   globals: {
     server: true,
+    accounting: true,
     d3: true,
     d3pie: true
   },

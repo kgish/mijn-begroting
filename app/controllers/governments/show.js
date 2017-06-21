@@ -80,7 +80,10 @@ export default Ember.Controller.extend({
     mainNames: ['bestuur-en-ondersteuning', 'veiligheid', 'verkeer-vervoer-en-waterstaat', 'economie', 'onderwijs','sport-cultuur-en-recreatie', 'sociaal-domein', 'volksgezondheid-en-milieu', 'volkshuisvesting-ruimtelijke-ordening-enz'],
 
     title: Ember.computed('model', function(){
-        return this.get('model.name');
+        let name = this.get('model.name'),
+            total = this.get('totalTerms'),
+            money = accounting.formatMoney(total, "€", 0, ".", ",", "%s %v");
+        return `${name} | ${money}`;
     }),
 
     subtitle: Ember.computed('year', 'period', 'direction', function(){
@@ -100,7 +103,8 @@ export default Ember.Controller.extend({
            segments.push({
                label: term.term_name,
                value: term.total,
-               percentage: (100*term.total/total_terms)
+               percentage: (100*term.total/total_terms),
+               caption: accounting.formatMoney(term.total, "€", 0, ".", ",", "%s %v")
            })
         });
 

@@ -72,11 +72,15 @@ export default Ember.Component.extend({
                     "percentage": 100
                 }
             },
+            tooltips: {
+                enabled: true,
+                type: 'caption'
+            },
             "callbacks": {
-                onload: null,
-                onMouseoverSegment: null,
-                onMouseoutSegment: null,
-                onClickSegment: null
+                // onload: null,
+                // onMouseoverSegment: null,
+                // onMouseoutSegment: null,
+                // onClickSegment: null
             }
         });
 
