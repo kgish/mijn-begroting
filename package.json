@@ -45,6 +45,7 @@
     "ember-truth-helpers": "^1.3.0",
     "emberx-range-input": "^1.0.2",
     "emberx-select": "^3.0.1",
+    "input-range-scss": "^1.4.1",
     "install": "^0.10.1",
     "loader.js": "^4.2.3",
     "mirage": "0.0.6",
