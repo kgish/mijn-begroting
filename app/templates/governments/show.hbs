@@ -108,13 +108,18 @@
                 {{#each segments as |segment index|}}
                     <div class="row">
                         <div class="col-md-6">
-                            <p>{{segment.label}}</p>
-                        </div>
-                        <div class="col-md-1">
-                            <p><span id="slider-value-{{index}}">{{format-percentage segment.percentage}}</span></p>
+                            <p>
+                                <strong>{{segment.label}}</strong><br/>
+                                <span id="slider-value-{{index}}" class="slider-value">
+                                    {{format-money segment.value symbol="€" precision=0 thousand="." decimal="," format="%s %v"}}
+                                </span>
+                            </p>
                         </div>
                         <div class="col-md-5">
                             {{x-range-input id=(concat 'slider-' index) value=segment.percentage action=(action 'updateSlider' index)}}
+                        </div>
+                        <div class="col-md-1">
+                            <p><span id="slider-percentage-{{index}}" class="slider-percentage">{{format-percentage segment.percentage}}</span></p>
                         </div>
                     </div>
                 {{/each}}

@@ -80,10 +80,13 @@ export default Ember.Component.extend({
                 // onload: null,
                 // onMouseoverSegment: null,
                 // onMouseoutSegment: null,
-                // onClickSegment: null
+                onClickSegment(segment) {
+                    console.log(segment);
+                }
             }
         });
 
         this.set('piechart', piechart);
     }
 });
+

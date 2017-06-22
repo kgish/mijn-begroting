@@ -1,6 +1,9 @@
 /*eslint no-console: ["error", { allow: ["warn", "error"] }] */
 import Ember from 'ember';
-import config from 'mijn-begroting/config/environment';
+
+import HandleShowTerms from 'mijn-begroting/lib/handle-show-terms';
+import HandleUpdateSlider from 'mijn-begroting/lib/handle-update-slider';
+import FormatMoney from 'mijn-begroting/lib/format-money';
 
 export default Ember.Controller.extend({
 
@@ -82,7 +85,7 @@ export default Ember.Controller.extend({
     title: Ember.computed('model', function(){
         let name = this.get('model.name'),
             total = this.get('totalTerms'),
-            money = accounting.formatMoney(total, "€", 0, ".", ",", "%s %v");
+            money = FormatMoney(total);
         return `${name} | ${money}`;
     }),
 
@@ -104,7 +107,7 @@ export default Ember.Controller.extend({
                label: term.term_name,
                value: term.total,
                percentage: (100*term.total/total_terms),
-               caption: accounting.formatMoney(term.total, "€", 0, ".", ",", "%s %v")
+               caption: FormatMoney(term.total)
            })
         });
 
@@ -130,52 +133,7 @@ export default Ember.Controller.extend({
             });
         },
         showTerms(b) {
-            if (b) {
-                let model_code = this.get('model.code'),
-                    gov_code = model_code.substring(2),
-                    direction = this.get('direction'),
-                    period = this.get('period'),
-                    year = this.get('year'),
-                    url_aggregations =
-                    config.apiHost + '/' + config.apiNamespace + '/aggregations/main' +
-                    '?direction=' + direction +
-                    '&period=' + period +
-                    '&gov_code=' + gov_code +
-                    '&year=' + year;
-                //console.log('url_aggregations='+url_aggregations);
-                this.set('loadingTerms', true);
-                Ember.$.get(url_aggregations).then(
-                    data => {
-                        let terms = data.facets.terms.terms,
-                            names = this.get('mainNames'),
-                            results = [],
-                            totalTerms = 0;
-                        terms.forEach(term => {
-                            let index = parseInt(term.term);
-                            term.mean = term.mean.toFixed(2);
-                            if (index > 0 && index < 10) {
-                                term.term_name = names[term.term - 1];
-                            } else {
-                                term.term_name = '';
-                            }
-                            results.push(term);
-                            totalTerms += parseInt(term.total);
-                            return term;
-                        });
-                        this.set('terms', results);
-                        this.set('totalTerms', totalTerms);
-                        this.set('loadingTerms', false);
-                        this.set('showTerms', true);
-                    },
-                    error => {
-                        console.error(error);
-                        this.set('loadingTerms', false);
-                        this.set('showTerms', true);
-                    }
-                );
-            } else {
-                this.set('showTerms', b);
-            }
+            HandleShowTerms(this, b);
         },
         showMetrics(b) {
             this.set('showMetrics', b);
@@ -191,15 +149,14 @@ export default Ember.Controller.extend({
             this.set('direction', direction);
         },
         updateSlider(id) {
-            let slider_value = Ember.$('#slider-value-'+id);
-            if (slider_value.length) {
-                Ember.run.later(this, () => {
-                    let percentage = parseInt(slider_value.text());
-                    console.log(percentage);
-                }, 500)
-            } else {
-               console.error('unknown slider id='+id);
-            }
+            //HandleUpdateSlider(this, id, this.get('totalTerms'));
+            this.set('sliderId', id);
+            Ember.run.debounce(this, this._handleUpdateSlider, 500);
         }
+    },
+
+    // Private
+    _handleUpdateSlider() {
+        HandleUpdateSlider(this, this.get('sliderId'), this.get('totalTerms'));
     }
 });
