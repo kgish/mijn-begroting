@@ -4,10 +4,6 @@ Personalized budgetering application for municipalities.
 
 Uses the [Openspending API](http://openspending.nl/api/v1/doc/).
 
-Choose the government (county) that you want to inspect.
-![](images/screenshot-governments.png)
-
-The piechart displays the budget for a given year.
 ![](images/screenshot-county-piechart-page.png)
 
 
