@@ -8,7 +8,7 @@ Choose the government (county) that you want to inspect.
 ![](images/screenshot-governments.png)
 
 The piechart displays the budget for a given year.
-![](images/screenshot-county-piechart.png)
+![](images/screenshot-county-piechart-page.png)
 
 
 ## Installation
