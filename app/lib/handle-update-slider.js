@@ -38,6 +38,7 @@ export default function(context, id, totalTerms) {
                 let sign = 1,
                     sliders_remaining = num_sliders - 1,
                     percentage_remaining,
+                    percentage_each,
                     results = [];
 
                 console.log(fn+'percentage_delta='+percentage_delta+', num_sliders='+num_sliders);
@@ -55,45 +56,129 @@ export default function(context, id, totalTerms) {
 
                 console.log(fn+'adjusted percentage_delta='+percentage_delta+', sign='+sign);
 
-                Ember.$('.x-range-input').each(index => {
-                    let slider_elem = Ember.$("#slider-"+index),
-                        value_elem = Ember.$('#slider-value-'+index),
-                        percentage_elem = Ember.$('#slider-percentage-'+index),
-                        old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
-                        old_percentage = parseInt(percentage_elem.text()),
-                        new_value, new_percentage, diff_percentage = 0;
+                percentage_each = percentage_remaining/sliders_remaining;
+                if (sign === 1) {
+                    Ember.$('.x-range-input').each(index => {
+                        let slider_elem = Ember.$("#slider-"+index),
+                            value_elem = Ember.$('#slider-value-'+index),
+                            percentage_elem = Ember.$('#slider-percentage-'+index),
+                            old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
+                            old_percentage = parseInt(percentage_elem.text()),
+                            new_value, new_percentage;
 
-                    if (index !== id) {
-                        diff_percentage = sign * Math.round(percentage_remaining/sliders_remaining);
-                        new_percentage = old_percentage + diff_percentage;
-                        if (new_percentage < 0) {
-                            console.log(fn+'new_percentage='+new_percentage+' < 0');
-                            diff_percentage += Math.abs(new_percentage);
-                            new_percentage = 0;
+                        if (index !== id) {
+                            new_percentage = old_percentage + percentage_each;
+                            percentage_elem.text(new_percentage+'%');
+                            sliders_remaining--;
+                            percentage_remaining -= percentage_each;
+                        } else {
+                            new_percentage = percentage_new;
+                            old_percentage = parseInt((100*old_value)/totalTerms);
                         }
-                        percentage_elem.text(new_percentage+'%');
-                        slider_elem.val(new_percentage);
-                        sliders_remaining--;
-                    } else {
-                        diff_percentage = 0;
-                        new_percentage = percentage_new;
-                        old_percentage = parseInt((100*old_value)/totalTerms);
-                    }
-                    new_value = (new_percentage*totalTerms)/100;
-                    value_elem.text(FormatMoney(new_value));
+                        new_value = (new_percentage*totalTerms)/100;
 
-                    if (config.environment === 'development') {
                         results.push({
-                            percentage: new_percentage,
-                            value: new_value
+                            index: index,
+                            slider_elem: slider_elem,
+                            value_elem: value_elem,
+                            percentage_elem: percentage_elem,
+                            old_percentage: old_percentage,
+                            new_percentage: Math.round(new_percentage),
+                            old_value: old_value,
+                            new_value: Math.round(new_value)
                         });
-                    }
 
-                    percentage_remaining -= Math.abs(diff_percentage);
-                    percentage_check_total += new_percentage;
-                    value_check_total += new_value;
+                        percentage_check_total += new_percentage;
+                        value_check_total += new_value;
 
-                    console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage_diff='+diff_percentage+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
+                        console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
+                    });
+
+                } else {
+                    Ember.$('.x-range-input').each(index => {
+                        let slider_elem = Ember.$("#slider-"+index),
+                            value_elem = Ember.$('#slider-value-'+index),
+                            percentage_elem = Ember.$('#slider-percentage-'+index),
+                            old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
+                            old_percentage = parseInt(percentage_elem.text()),
+                            new_value, new_percentage;
+
+                        if (index !== id && old_percentage <= percentage_each) {
+                            percentage_remaining += (percentage_each - old_percentage);
+                            sliders_remaining--;
+                            new_percentage = new_value = 0;
+                            results.push({
+                                index: index,
+                                slider_elem: slider_elem,
+                                value_elem: value_elem,
+                                percentage_elem: percentage_elem,
+                                old_percentage: old_percentage,
+                                new_percentage: Math.round(new_percentage),
+                                old_value: old_value,
+                                new_value: Math.round(new_value)
+                            });
+                        }
+
+                        percentage_check_total += new_percentage;
+                        value_check_total += new_value;
+
+                        console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
+                    });
+
+                    percentage_each = percentage_remaining/sliders_remaining;
+
+                    Ember.$('.x-range-input').each(index => {
+                        let slider_elem = Ember.$("#slider-"+index),
+                            value_elem = Ember.$('#slider-value-'+index),
+                            percentage_elem = Ember.$('#slider-percentage-'+index),
+                            old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
+                            old_percentage = parseInt(percentage_elem.text()),
+                            new_value, new_percentage;
+
+                        if (index !== id) {
+                            if (!results.findBy('index', index)) {
+                                percentage_remaining -= percentage_each;
+                                sliders_remaining--;
+                                new_percentage = old_percentage - percentage_each;
+                                new_value = (new_percentage*totalTerms)/100;
+                                results.push({
+                                    index: index,
+                                    slider_elem: slider_elem,
+                                    value_elem: value_elem,
+                                    percentage_elem: percentage_elem,
+                                    old_percentage: old_percentage,
+                                    new_percentage: Math.round(new_percentage),
+                                    old_value: old_value,
+                                    new_value: Math.round(new_value)
+                                });
+                            }
+                        } else {
+                            new_percentage = percentage_new;
+                            old_percentage = parseInt((100*old_value)/totalTerms);
+                            new_value = (new_percentage*totalTerms)/100;
+                            results.push({
+                                index: index,
+                                slider_elem: slider_elem,
+                                value_elem: value_elem,
+                                percentage_elem: percentage_elem,
+                                old_percentage: old_percentage,
+                                new_percentage: Math.round(new_percentage),
+                                old_value: old_value,
+                                new_value: Math.round(new_value)
+                            });
+                        }
+
+                        percentage_check_total += new_percentage;
+                        value_check_total += new_value;
+
+                        console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
+                    });
+                }
+
+                results.forEach(result => {
+                    result.slider_elem.val(result.new_percentage);
+                    result.percentage_elem.text(result.new_percentage+'%');
+                    result.value_elem.text(FormatMoney(result.new_value));
                 });
 
                 if (config.environment === 'development') {
@@ -107,20 +192,20 @@ export default function(context, id, totalTerms) {
                     }
 
                     // Verify new values have taken affect for all sliders.
-                    results.forEach((result,index) => {
-                        let percentage = parseInt(Ember.$('#slider-percentage-'+index).text()),
-                            value_text = parseInt(Ember.$('#slider-value-'+index).text().replace(/[^0-9]/g,'')),
-                            value_slider = parseInt(Ember.$('#slider-'+index).val());
+                    results.forEach(result => {
+                        let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
+                            value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,'')),
+                            value_slider = parseInt(Ember.$('#slider-'+result.index).val());
 
                         //console.log(fn+'result['+index+']='+JSON.stringify(result));
-                        if (value_slider !== result.percentage) {
-                            console.error(fn+'i=' + index + ', value_slider (' + value_slider + ') !== result.percentage (' + result.percentage + ')');
+                        if (value_slider !== result.new_percentage) {
+                            console.error(fn+'i=' + result.index + ', value_slider (' + value_slider + ') !== result.new_percentage (' + result.new_percentage + ')');
                         }
-                        if (percentage !== result.percentage) {
-                            console.error(fn+'i=' + index + ', percentage (' + percentage + ') !== result.percentage (' + result.percentage + ')');
+                        if (percentage !== result.new_percentage) {
+                            console.error(fn+'i=' + result.index + ', percentage (' + percentage + ') !== result.new_percentage (' + result.new_percentage + ')');
                         }
-                        if (value_text !== result.value) {
-                            console.error(fn+'i=' + index + ', value_text (' + value_text + ') !== result.value (' + result.value + ')');
+                        if (value_text !== result.new_value) {
+                            console.error(fn+'i=' + result.index + ', value_text (' + value_text + ') !== result.new_value (' + result.value + ')');
                         }
                     });
                 }
