@@ -229,6 +229,21 @@ export default function(context, id, totalTerms) {
                     });
                 }
 
+                // Totals.
+                let sliderPercentageTotal = 0,
+                    sliderValueTotal = 0;
+
+                results.forEach(result => {
+                    let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
+                        value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,''));
+
+                    sliderPercentageTotal += percentage;
+                    sliderValueTotal += value_text;
+                });
+
+                context.set('sliderPercentageTotal', sliderPercentageTotal);
+                context.set('sliderValueTotal', sliderValueTotal);
+
             } else {
                 console.error(fn+'percentage_delta='+percentage_delta+' => return');
             }

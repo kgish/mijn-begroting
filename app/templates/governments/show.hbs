@@ -123,6 +123,21 @@
                         </div>
                     </div>
                 {{/each}}
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>
+                            <strong>Total</strong><br/>
+                            <span id="slider-value-total">
+                                {{format-money sliderValueTotal symbol="€" precision=0 thousand="." decimal="," format="%s %v"}}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                    </div>
+                    <div class="col-md-1">
+                        <p><span id="slider-percentage-total">{{format-percentage sliderPercentageTotal}}</span></p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 {{d3-piechart
