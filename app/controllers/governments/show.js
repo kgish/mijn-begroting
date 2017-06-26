@@ -25,6 +25,9 @@ export default Ember.Controller.extend({
         return result;
     }),
 
+    sliderPercentageTotal: 100,
+    sliderValueTotal: Ember.computed.alias('totalTerms'),
+
     terms: [],
     totalTerms: 0,
     showTerms: false,
