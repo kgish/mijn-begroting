@@ -5,6 +5,8 @@ import HandleShowTerms from 'mijn-begroting/lib/handle-show-terms';
 import HandleUpdateSlider from 'mijn-begroting/lib/handle-update-slider';
 import FormatMoney from 'mijn-begroting/lib/format-money';
 
+import config from 'mijn-begroting/config/environment';
+
 export default Ember.Controller.extend({
 
     modelsTableCustom: Ember.inject.service(),
@@ -13,6 +15,15 @@ export default Ember.Controller.extend({
 
     metrics: [],
     showMetrics: false,
+
+    googlemaps: Ember.computed('model', function(){
+        let name = this.get('model.name'),
+            result = 'https://www.google.com/maps/embed/v1/place?' + 'key=' + config.APP.GOOGLE_API_KEY + '&q=' + name + ', Netherlands';
+
+        result = result.replace(/ /g, '+');
+        result = encodeURI(result);
+        return result;
+    }),
 
     terms: [],
     totalTerms: 0,

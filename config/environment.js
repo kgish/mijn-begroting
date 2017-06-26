@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 module.exports = function(environment) {
-    var ENV = {
+    var ENV = { // eslint-disable-line
         modulePrefix: 'mijn-begroting',
         environment: environment,
         rootURL: '/',
@@ -20,7 +20,8 @@ module.exports = function(environment) {
         APP: {
           // Here you can pass flags/options to your application instance
           // when it is created
-          title: 'Mijn-Begroting'
+          title: 'Mijn-Begroting',
+          GOOGLE_API_KEY: 'AIzaSyDgAtc6unTykTYcBRGBVHLgzPdVysFVx7c'
         },
 
         apiHost: 'http://www.openspending.nl',

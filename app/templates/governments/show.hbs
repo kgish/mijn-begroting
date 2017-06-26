@@ -1,102 +1,115 @@
 {{#page-header title='Show' description=(concat 'Some more detailed information about ' model.name)}}
     <h2>{{model.name}}</h2>
-    <form>
+    <div class="row">
+        <div class="col-md-6">
+            <form>
 
-        <div class="form-group row">
-            <label for="government-id" class="col-2 col-form-label">Id:</label>
-            <div class="col-10">
-                <input title="id" class="form-control" type="text" value={{model.id}} id="government-id" readonly>
-            </div>
+                <div class="form-group row">
+                    <label for="government-id" class="col-2 col-form-label">Id:</label>
+                    <div class="col-10">
+                        <input title="id" class="form-control" type="text" value={{model.id}} id="government-id" readonly>
+                    </div>
+                </div>
+
+                {{#if model.code}}
+                    <div class="form-group row">
+                        <label for="government-code" class="col-2 col-form-label">Code:</label>
+                        <div class="col-10">
+                            <input title="code" class="form-control" type="text" value={{model.code}} id="government-code" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.country}}
+                    <div class="form-group row">
+                        <label for="government-country" class="col-2 col-form-label">Country:</label>
+                        <div class="col-10">
+                            <input title="country" class="form-control" type="text" value={{model.country}} id="government-country" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.intro}}
+                    <div class="form-group row">
+                        <label for="government-intro" class="col-2 col-form-label">Intro:</label>
+                        <div class="col-10">
+                            <textarea title="intro" class="form-control" id="government-intro" rows="3" readonly>{{model.intro}}</textarea>
+                        </div>
+                    </div>
+                {{/if}}
+
+                <div class="form-group row">
+                    <label for="government-kind" class="col-2 col-form-label">Kind:</label>
+                    <div class="col-10">
+                        <input title="kind" class="form-control" type="text" value={{model.kind}} id="government-kind" readonly>
+                    </div>
+                </div>
+
+                {{#if model.location}}
+                    <div class="form-group row">
+                        <label for="government-location" class="col-2 col-form-label">Location:</label>
+                        <div class="col-10">
+                            <input title="location" class="form-control" type="text" value={{model.location}} id="government-location" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.state}}
+                    <div class="form-group row">
+                        <label for="government-state" class="col-2 col-form-label">State:</label>
+                        <div class="col-10">
+                            <input title="state" class="form-control" type="text" value={{model.state}} id="government-state" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.lat}}
+                    <div class="form-group row">
+                        <label for="government-latlong" class="col-2 col-form-label">Lat/long:</label>
+                        <div class="col-10">
+                            <input title="latlong" class="form-control" type="text" value={{format-latlong model.lat model.lon}} id="government-latlong" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.website}}
+                    <div class="form-group row">
+                        <label for="government-website" class="col-2 col-form-label">Website:</label>
+                        <div class="col-10">
+                            <input title="website" class="form-control" type="text" value={{model.website}} id="government-website" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.resource_uri}}
+                    <div class="form-group row">
+                        <label for="government-resource-uri" class="col-2 col-form-label">Resource URI:</label>
+                        <div class="col-10">
+                            <input title="resource uri" class="form-control" type="text" value={{model.resource_uri}} id="government-resource-uri" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if model.slug}}
+                    <div class="form-group row">
+                        <label for="government-slug" class="col-2 col-form-label">Slug:</label>
+                        <div class="col-10">
+                            <input title="slug" class="form-control" type="text" value={{model.slug}} id="government-slug" readonly>
+                        </div>
+                    </div>
+                {{/if}}
+            </form>
         </div>
 
-        {{#if model.code}}
-            <div class="form-group row">
-                <label for="government-code" class="col-2 col-form-label">Code:</label>
-                <div class="col-10">
-                    <input title="code" class="form-control" type="text" value={{model.code}} id="government-code" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.country}}
-            <div class="form-group row">
-                <label for="government-country" class="col-2 col-form-label">Country:</label>
-                <div class="col-10">
-                    <input title="country" class="form-control" type="text" value={{model.country}} id="government-country" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.intro}}
-            <div class="form-group row">
-                <label for="government-intro" class="col-2 col-form-label">Intro:</label>
-                <div class="col-10">
-                    <textarea title="intro" class="form-control" id="government-intro" rows="3" readonly>{{model.intro}}</textarea>
-                </div>
-            </div>
-        {{/if}}
-
-        <div class="form-group row">
-            <label for="government-kind" class="col-2 col-form-label">Kind:</label>
-            <div class="col-10">
-                <input title="kind" class="form-control" type="text" value={{model.kind}} id="government-kind" readonly>
-            </div>
+        <div class="col-md-6">
+            <iframe class="embed-responsive-item"
+                width="100%"
+                height="100%"
+                frameborder="0" style="border:0"
+                src={{googlemaps}}>
+            </iframe>
         </div>
-
-        {{#if model.location}}
-            <div class="form-group row">
-                <label for="government-location" class="col-2 col-form-label">Location:</label>
-                <div class="col-10">
-                    <input title="location" class="form-control" type="text" value={{model.location}} id="government-location" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.state}}
-            <div class="form-group row">
-                <label for="government-state" class="col-2 col-form-label">State:</label>
-                <div class="col-10">
-                    <input title="state" class="form-control" type="text" value={{model.state}} id="government-state" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.lat}}
-            <div class="form-group row">
-                <label for="government-latlong" class="col-2 col-form-label">Lat/long:</label>
-                <div class="col-10">
-                    <input title="latlong" class="form-control" type="text" value={{format-latlong model.lat model.lon}} id="government-latlong" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.website}}
-            <div class="form-group row">
-                <label for="government-website" class="col-2 col-form-label">Website:</label>
-                <div class="col-10">
-                    <input title="website" class="form-control" type="text" value={{model.website}} id="government-website" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.resource_uri}}
-            <div class="form-group row">
-                <label for="government-resource-uri" class="col-2 col-form-label">Resource URI:</label>
-                <div class="col-10">
-                    <input title="resource uri" class="form-control" type="text" value={{model.resource_uri}} id="government-resource-uri" readonly>
-                </div>
-            </div>
-        {{/if}}
-
-        {{#if model.slug}}
-            <div class="form-group row">
-                <label for="government-slug" class="col-2 col-form-label">Slug:</label>
-                <div class="col-10">
-                    <input title="slug" class="form-control" type="text" value={{model.slug}} id="government-slug" readonly>
-                </div>
-            </div>
-        {{/if}}
-    </form>
+    </div>
 
     <hr/>
 
