@@ -83,7 +83,7 @@
 
                 {{#if model.resource_uri}}
                     <div class="form-group row">
-                        <label for="government-resource-uri" class="col-2 col-form-label">Resource URI:</label>
+                        <label for="government-resource-uri" class="col-2 col-form-label">Uri:</label>
                         <div class="col-10">
                             <input title="resource uri" class="form-control" type="text" value={{model.resource_uri}} id="government-resource-uri" readonly>
                         </div>
@@ -102,12 +102,16 @@
         </div>
 
         <div class="col-md-6">
-            <iframe class="embed-responsive-item"
-                width="100%"
-                height="100%"
-                frameborder="0" style="border:0"
-                src={{googlemaps}}>
-            </iframe>
+            {{#if displayMap}}
+                <iframe class="embed-responsive-item"
+                    width="100%"
+                    height="100%"
+                    frameborder="0" style="border:0"
+                    src={{googlemaps}}>
+                </iframe>
+            {{else}}
+                <p>No map available for government type {{model.kind}}.</p>
+            {{/if}}
         </div>
     </div>
 
@@ -136,26 +140,6 @@
                         </div>
                     </div>
                 {{/each}}
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>
-                            <strong>Total</strong><br/>
-                            <span id="slider-value-total">
-                                {{format-money sliderValueTotal symbol="€" precision=0 thousand="." decimal="," format="%s %v"}}
-                            </span>
-                        </p>
-                    </div>
-                    <div class="col-md-5">
-                    </div>
-                    <div class="col-md-1">
-                        <strong>Total</strong><br/>
-                        <p>
-                            <span id="slider-percentage-total">
-                                {{format-percentage sliderPercentageTotal}}
-                            </span>
-                        </p>
-                    </div>
-                </div>
             </div>
             <div class="col-md-6">
                 {{d3-piechart

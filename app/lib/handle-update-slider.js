@@ -21,7 +21,7 @@ export default function(context, id, totalTerms) {
                 }
             });
 
-            console.log(fn+'percentage_new='+percentage_new+', percentage_other_total='+percentage_other_total);
+            //console.log(fn+'percentage_new='+percentage_new+', percentage_other_total='+percentage_other_total);
 
             // Sanity check, just in case.
             if (percentage_new > 100) {
@@ -34,165 +34,55 @@ export default function(context, id, totalTerms) {
 
             percentage_delta = 100 - (percentage_other_total + percentage_new);
             if (percentage_delta) {
-                let num_sliders = Ember.$('.x-range-input').length;
                 let sign = 1,
-                    sliders_remaining = num_sliders - 1,
-                    percentage_remaining,
-                    percentage_each,
                     results = [];
-
-                console.log(fn+'percentage_delta='+percentage_delta+', num_sliders='+num_sliders);
-                if (num_sliders < 2) {
-                    console.error(fn+'num_sliders < 2 => return');
-                    return;
-                }
 
                 if (percentage_delta < 0) {
                     percentage_delta *= -1;
                     sign = -1;
                 }
 
-                percentage_remaining = percentage_delta;
+                //console.log(fn+'percentage_delta='+percentage_delta+', sign='+sign);
 
-                console.log(fn+'adjusted percentage_delta='+percentage_delta+', sign='+sign);
+                Ember.$('.x-range-input').each(index => {
+                    let slider_elem = Ember.$("#slider-"+index),
+                        value_elem = Ember.$('#slider-value-'+index),
+                        percentage_elem = Ember.$('#slider-percentage-'+index),
+                        old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
+                        old_percentage = parseInt(percentage_elem.text()),
+                        new_value, new_percentage;
 
-                percentage_each = percentage_remaining/sliders_remaining;
-                console.log(fn+'initial percentage_remaining='+percentage_remaining+' / sliders_remaining='+sliders_remaining+' => revised percentage_each='+percentage_each);
-
-                if (sign === 1) {
-
-                    // Slider has been moved left, meaning that additional percentage (percentage_delta) has been
-                    // freed up and needs to be added equally (percentage_each) across all other sliders.
-                    console.log(fn+'slider moved left, index=1');
-
-                    Ember.$('.x-range-input').each(index => {
-                        let slider_elem = Ember.$("#slider-"+index),
-                            value_elem = Ember.$('#slider-value-'+index),
-                            percentage_elem = Ember.$('#slider-percentage-'+index),
-                            old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
-                            old_percentage = parseInt(percentage_elem.text()),
-                            new_value, new_percentage;
-
-                        if (index !== id) {
-                            new_percentage = old_percentage + percentage_each;
-                            sliders_remaining--;
-                            percentage_remaining -= percentage_each;
+                    if (index !== id) {
+                        if (old_percentage) {
+                            let delta = (old_percentage/percentage_other_total)*percentage_delta;
+                            //console.log(fn+'delta='+delta);
+                            new_percentage = old_percentage + sign * delta;
                         } else {
-                            new_percentage = percentage_new;
-                            old_percentage = parseInt((100*old_value)/totalTerms);
+                            new_percentage = 0;
                         }
-
-                        new_value = (new_percentage*totalTerms)/100;
-
-                        results.push({
-                            index: index,
-                            slider_elem: slider_elem,
-                            value_elem: value_elem,
-                            percentage_elem: percentage_elem,
-                            old_percentage: old_percentage,
-                            new_percentage: Math.round(new_percentage),
-                            old_value: old_value,
-                            new_value: Math.round(new_value)
-                        });
-
-                        percentage_check_total += new_percentage;
-                        value_check_total += new_value;
-
-                        console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
-                    });
-
-                } else {
-
-                    // Slider has been moved right, meaning that less percentage (percentage_delta) is available and
-                    // must be deducted equally across (percentage_each) all other sliders.
-                    console.log(fn+'slider moved right, index=-1');
-
-                    let not_done = true;
-
-                    while (not_done) {
-                        let sliders_changed = 0;
-                        console.log(fn+'looking for sliders');
-                        Ember.$('.x-range-input').each(index => {
-                            let slider_elem = Ember.$("#slider-"+index),
-                                value_elem = Ember.$('#slider-value-'+index),
-                                percentage_elem = Ember.$('#slider-percentage-'+index),
-                                old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
-                                old_percentage = parseInt(percentage_elem.text()),
-                                new_value, new_percentage;
-
-                            // First we handle sliders whose percentage is this than percentage_each, add the differences
-                            // and carry over to be included with the others.
-                            if (!results.findBy('index', index)) {
-                                if (index !== id && (old_percentage <= percentage_each)) {
-                                    percentage_remaining += (percentage_each - old_percentage);
-                                    sliders_remaining--;
-                                    sliders_changed++;
-                                    new_percentage = new_value = 0;
-                                    results.push({
-                                        index: index,
-                                        slider_elem: slider_elem,
-                                        value_elem: value_elem,
-                                        percentage_elem: percentage_elem,
-                                        old_percentage: old_percentage,
-                                        new_percentage: Math.round(new_percentage),
-                                        old_value: old_value,
-                                        new_value: Math.round(new_value)
-                                    });
-
-                                    console.log(fn + 'id=' + index + ', sliders_remaining=' + sliders_remaining + ', percentage_remaining=' + percentage_remaining + ', percentage ' + old_percentage + ' => ' + new_percentage + ', value ' + old_value + ' => ' + new_value);
-                                }
-                            }
-                        });
-                        percentage_each = percentage_remaining/sliders_remaining;
-                        console.log(fn+'percentage_remaining='+percentage_remaining+' / sliders_remaining='+sliders_remaining+' => revised percentage_each='+percentage_each);
-                        not_done = sliders_changed && sliders_remaining;
+                    } else {
+                        new_percentage = percentage_new;
+                        old_percentage = parseInt((100*old_value)/totalTerms);
                     }
 
-                    // Remaining percentage has been adjusted and a revised percentage_each can now be divvied equally
-                    // over all remaining sliders.
-                    percentage_each = percentage_remaining/sliders_remaining;
-                    console.log(fn+'adjusted percentage_remaining='+percentage_remaining+' / sliders_remaining='+sliders_remaining+' => revised percentage_each='+percentage_each);
+                    new_value = (new_percentage*totalTerms)/100;
 
-                    Ember.$('.x-range-input').each(index => {
-                        let slider_elem = Ember.$("#slider-"+index),
-                            value_elem = Ember.$('#slider-value-'+index),
-                            percentage_elem = Ember.$('#slider-percentage-'+index),
-                            old_value = parseInt(value_elem.text().replace(/[^0-9]/g,'')),
-                            old_percentage = parseInt(percentage_elem.text()),
-                            new_value, new_percentage;
-
-                        if (!results.findBy('index', index)) {
-                            if (index !== id) {
-                                new_percentage = old_percentage - percentage_each;
-                                sliders_remaining--;
-                                percentage_remaining -= percentage_each;
-                            } else {
-                                new_percentage = percentage_new;
-                                old_percentage = parseInt((100*old_value)/totalTerms);
-                            }
-
-                            new_value = (new_percentage*totalTerms)/100;
-
-                            results.push({
-                                index: index,
-                                slider_elem: slider_elem,
-                                value_elem: value_elem,
-                                percentage_elem: percentage_elem,
-                                old_percentage: old_percentage,
-                                new_percentage: Math.round(new_percentage),
-                                old_value: old_value,
-                                new_value: Math.round(new_value)
-                            });
-
-                            percentage_check_total += new_percentage;
-                            value_check_total += new_value;
-
-                            console.log(fn+'id='+index+', sliders_remaining='+sliders_remaining+', percentage_remaining='+percentage_remaining+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
-                        } else {
-                            console.log('index='+index+' => skip');
-                        }
+                    results.push({
+                        index: index,
+                        slider_elem: slider_elem,
+                        value_elem: value_elem,
+                        percentage_elem: percentage_elem,
+                        old_percentage: old_percentage,
+                        new_percentage: Math.round(new_percentage),
+                        old_value: old_value,
+                        new_value: Math.round(new_value)
                     });
-                }
+
+                    percentage_check_total += new_percentage;
+                    value_check_total += new_value;
+
+                    //console.log(fn+'id='+index+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
+                });
 
                 results.forEach(result => {
                     result.slider_elem.val(result.new_percentage);
@@ -228,21 +118,6 @@ export default function(context, id, totalTerms) {
                         }
                     });
                 }
-
-                // Totals.
-                let sliderPercentageTotal = 0,
-                    sliderValueTotal = 0;
-
-                results.forEach(result => {
-                    let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
-                        value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,''));
-
-                    sliderPercentageTotal += percentage;
-                    sliderValueTotal += value_text;
-                });
-
-                context.set('sliderPercentageTotal', sliderPercentageTotal);
-                context.set('sliderValueTotal', sliderValueTotal);
 
             } else {
                 console.error(fn+'percentage_delta='+percentage_delta+' => return');

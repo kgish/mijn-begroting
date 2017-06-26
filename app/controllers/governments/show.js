@@ -16,6 +16,11 @@ export default Ember.Controller.extend({
     metrics: [],
     showMetrics: false,
 
+    displayMap: Ember.computed('model.kind', function(){
+       let kind = this.get('model.kind');
+       return ['county','province','subcounty','watership'].indexOf(kind) !== -1;
+    }),
+
     googlemaps: Ember.computed('model', function(){
         let name = this.get('model.name'),
             result = 'https://www.google.com/maps/embed/v1/place?' + 'key=' + config.APP.GOOGLE_API_KEY + '&q=' + name + ', Netherlands';
@@ -24,9 +29,6 @@ export default Ember.Controller.extend({
         result = encodeURI(result);
         return result;
     }),
-
-    sliderPercentageTotal: 100,
-    sliderValueTotal: Ember.computed.alias('totalTerms'),
 
     terms: [],
     totalTerms: 0,
