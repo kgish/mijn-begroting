@@ -8,10 +8,12 @@ export default function(context, id, totalTerms) {
     if (elem_changed.length) {
         Ember.run.later(context, () => {
             let percentage_new = parseInt(elem_changed.val()),
-                percentage_other_total = 0,
+                locked_sliders = context.get('lockedSliders'),
+                percentage_other_unlocked_total = 0,
+                percentage_other_locked_total = 0,
                 percentage_check_total = 0,
                 value_check_total = 0,
-                num_sliders_other = 0,
+                num_sliders_other_unlocked = 0,
                 percentage_delta,
                 terms = context.get('terms'),
                 terms_new = [];
@@ -21,12 +23,17 @@ export default function(context, id, totalTerms) {
             // Calculate total of all other percentages.
             Ember.$('.slider-percentage').each((index,elem) => {
                 if (index !== id) {
-                    percentage_other_total += parseInt(Ember.$(elem).text());
-                    num_sliders_other++;
+                    let val = parseInt(Ember.$(elem).text());
+                    if (locked_sliders[index]) {
+                        percentage_other_locked_total += val;
+                    } else {
+                        num_sliders_other_unlocked++;
+                        percentage_other_unlocked_total += val;
+                    }
                 }
             });
 
-            //console.log(fn+'percentage_new='+percentage_new+', percentage_other_total='+percentage_other_total);
+            //console.log(fn+'percentage_new='+percentage_new+', percentage_other_unlocked_total='+percentage_other_unlocked_total);
 
             // Sanity check, just in case.
             if (percentage_new > 100) {
@@ -37,7 +44,7 @@ export default function(context, id, totalTerms) {
                 percentage_new = 0;
             }
 
-            percentage_delta = 100 - (percentage_other_total + percentage_new);
+            percentage_delta = 100 - (percentage_other_unlocked_total + percentage_other_locked_total + percentage_new);
 
             if (percentage_delta) {
                 let sign = 1,
@@ -59,16 +66,19 @@ export default function(context, id, totalTerms) {
                         new_value, new_percentage;
 
                     if (index !== id) {
-                        if (sign === -1) {
+                        if (locked_sliders[index]) {
+                            // Locked sliders remained unchanged.
+                            new_percentage = old_percentage;
+                        } else if (sign === -1) {
                             if (old_percentage) {
-                                let delta = (old_percentage/percentage_other_total)*percentage_delta;
+                                let delta = (old_percentage/percentage_other_unlocked_total)*percentage_delta;
                                 //console.log(fn+'delta='+delta);
                                 new_percentage = old_percentage - delta;
                             } else {
                                 new_percentage = 0;
                             }
                         } else {
-                            let delta = percentage_delta/num_sliders_other;
+                            let delta = percentage_delta/num_sliders_other_unlocked;
                             //console.log(fn+'delta='+delta);
                             new_percentage = old_percentage + delta;
                         }
@@ -99,7 +109,12 @@ export default function(context, id, totalTerms) {
                 terms.forEach((term,index) => {
                     let term_new = term,
                         results_new = results.findBy('index', index);
-                    term_new.total = results_new ? results_new.new_value : term.total;
+                    if (results_new) {
+                        term_new.total = results_new.new_value;
+                    } else {
+                        console.error(fn+'could not find results for index='+index);
+                        term_new.total = term.total;
+                    }
                     terms_new.push(term_new);
                 });
 
@@ -116,23 +131,23 @@ export default function(context, id, totalTerms) {
                             console.error(fn+'value_check_total='+value_check_total+' => (should be between '+(totalTerms-epsilon)+ ' - '+(totalTerms+epsilon)+')');
                         }
 
-                        // // Verify new values have taken affect for all sliders.
-                        // results.forEach(result => {
-                        //     let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
-                        //         value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,'')),
-                        //         value_slider = parseInt(Ember.$('#slider-'+result.index).val());
-                        //
-                        //     //console.log(fn+'result['+index+']='+JSON.stringify(result));
-                        //     if (value_slider !== result.new_percentage) {
-                        //         console.error(fn+'i=' + result.index + ', value_slider (' + value_slider + ') !== result.new_percentage (' + result.new_percentage + ')');
-                        //     }
-                        //     if (percentage !== result.new_percentage) {
-                        //         console.error(fn+'i=' + result.index + ', percentage (' + percentage + ') !== result.new_percentage (' + result.new_percentage + ')');
-                        //     }
-                        //     if (value_text !== result.new_value) {
-                        //         console.error(fn+'i=' + result.index + ', value_text (' + value_text + ') !== result.new_value (' + result.new_value + ')');
-                        //     }
-                        // });
+                        // Verify new values have taken affect for all sliders.
+                        results.forEach(result => {
+                            let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
+                                value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,'')),
+                                value_slider = parseInt(Ember.$('#slider-'+result.index).val());
+
+                            //console.log(fn+'result['+index+']='+JSON.stringify(result));
+                            if (value_slider !== result.new_percentage) {
+                                console.error(fn+'i=' + result.index + ', value_slider (' + value_slider + ') !== result.new_percentage (' + result.new_percentage + ')');
+                            }
+                            if (percentage !== result.new_percentage) {
+                                console.error(fn+'i=' + result.index + ', percentage (' + percentage + ') !== result.new_percentage (' + result.new_percentage + ')');
+                            }
+                            if (value_text !== result.new_value) {
+                                console.error(fn+'i=' + result.index + ', value_text (' + value_text + ') !== result.new_value (' + result.new_value + ')');
+                            }
+                        });
                     });
                 }
 

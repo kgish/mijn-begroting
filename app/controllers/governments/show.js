@@ -113,32 +113,35 @@ export default Ember.Controller.extend({
         return `${year} | ${periods[period]} | ${direction}`
     }),
 
-    segments_sliders: Ember.computed('terms', function(){
+    segmentsSliders: Ember.computed('terms', 'lockedCount', function(){
         let terms = this.get('terms'),
             total_terms = this.get('totalTerms'),
-            segments_sliders = [];
+            lockedSliders = this.get('lockedSliders'),
+            segmentsSliders = [];
 
-        terms.forEach(term => {
-            segments_sliders.push({
+        this._initLockedSliders(lockedSliders);
+        terms.forEach((term,index) => {
+            segmentsSliders.push({
                 label: term.term_name,
                 value: term.total,
                 percentage: (100*term.total/total_terms),
-                caption: FormatMoney(term.total)
+                caption: FormatMoney(term.total),
+                locked: lockedSliders[index]
             });
         });
 
-        return segments_sliders;
+        return segmentsSliders;
     }),
 
-    segments_pie: Ember.computed('terms', function(){
+    segmentsPie: Ember.computed('terms', function(){
         let terms = this.get('terms'),
             total_terms = this.get('totalTerms'),
-            segments_pies = [];
+            segmentsPies = [];
 
         terms.forEach(term => {
             // Only allow non-zero value segments in piechart.
             if (term.total) {
-                segments_pies.push({
+                segmentsPies.push({
                     label: term.term_name,
                     value: term.total,
                     percentage: (100*term.total/total_terms),
@@ -147,7 +150,20 @@ export default Ember.Controller.extend({
             }
         });
 
-        return segments_pies;
+        return segmentsPies;
+    }),
+
+    lockedSliders: [],
+    lockedCount: 0,
+    maxSlider: Ember.computed('lockedCount', function(){
+       let segmentsSliders = this.get('segmentsSliders'),
+           percentage_locked_total = 0;
+       segmentsSliders.forEach(slider => {
+           if (slider.locked) {
+               percentage_locked_total += slider.percentage;
+           }
+       });
+       return 100 - percentage_locked_total;
     }),
 
     actions: {
@@ -188,11 +204,26 @@ export default Ember.Controller.extend({
             //HandleUpdateSlider(this, id, this.get('totalTerms'));
             this.set('sliderId', id);
             Ember.run.debounce(this, this._handleUpdateSlider, 500);
+        },
+        clickLock(index) {
+            let lockedSliders = this.get('lockedSliders');
+            this._initLockedSliders(lockedSliders);
+            lockedSliders[index] = !lockedSliders[index];
+            this.set('lockedSliders', lockedSliders);
+            this.set('lockedCount', parseInt(this.get('lockedCount')+1));
         }
     },
 
     // Private
     _handleUpdateSlider() {
         HandleUpdateSlider(this, this.get('sliderId'), this.get('totalTerms'));
+    },
+    _initLockedSliders(lockedSliders) {
+        if (lockedSliders.length === 0) {
+            let len = this.get('terms').length;
+            while (len--) {
+                lockedSliders.push(false);
+            }
+        }
     }
 });

@@ -104,3 +104,7 @@ $models-table-font-size: 0.8rem;
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
+input[type="range"]:disabled {
+  opacity: 0.5;
+}

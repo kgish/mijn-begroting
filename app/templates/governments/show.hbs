@@ -121,11 +121,13 @@
 
         <h2>Terms <a href="#" class="btn btn-success" {{action 'showTerms' false}}>Hide</a></h2>
 
+        <p>Use the sliders to adjust amounts or lock a value by clicking the icon.</p>
+
         <div class="row">
             <div class="col-md-6 piechart-sliders">
-                {{#each segments_sliders as |segment index|}}
+                {{#each segmentsSliders as |segment index|}}
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <p>
                                 <strong>{{segment.label}}</strong><br/>
                                 <span id="slider-value-{{index}}" class="slider-value">
@@ -133,11 +135,18 @@
                                 </span>
                             </p>
                         </div>
+                        <div class="col-md-1">
+                            <a href="#" {{action 'clickLock' index}}>{{fa-icon (if segment.locked 'lock' 'unlock')}}</a>
+                        </div>
                         <div class="col-md-5">
-                            {{x-range-input id=(concat 'slider-' index) value=segment.percentage action=(action 'updateSlider' index)}}
+                            {{#if segment.locked}}
+                                {{x-range-input id=(concat 'slider-' index) min=0 max=maxSlider step=1 disabled=true value=segment.percentage action=(action 'updateSlider' index)}}
+                            {{else}}
+                                {{x-range-input id=(concat 'slider-' index) min=0 max=maxSlider step=1 value=segment.percentage action=(action 'updateSlider' index)}}
+                            {{/if}}
                         </div>
                         <div class="col-md-1">
-                            <p><span id="slider-percentage-{{index}}" class="slider-percentage">{{format-percentage segment.percentage}}</span></p>
+                            <span id="slider-percentage-{{index}}" class="slider-percentage">{{format-percentage segment.percentage}}</span>
                         </div>
                     </div>
                 {{/each}}
@@ -146,7 +155,7 @@
                 {{d3-piechart
                     title=title
                     subtitle=subtitle
-                    segments=segments_pie
+                    segments=segmentsPie
                 }}
             </div>
         </div>
