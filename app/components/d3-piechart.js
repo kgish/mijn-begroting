@@ -11,16 +11,20 @@ export default Ember.Component.extend({
     },
 
     didRender() {
-        let d3_piechart = this.get('classNames')[0],
-            len = Ember.$('#' + d3_piechart).length;
-        if (len === 0) {
-            let cid = this.get('cid'),
-                sel = '#'+cid,
-                obj = Ember.$(sel);
+        let piechart = this.get('piechart'),
+            d3_piechart = this.get('classNames')[0],
+            cid = this.get('cid'),
+            sel = '#'+cid,
+            obj = Ember.$(sel);
 
-            obj.append('<div id="' + d3_piechart + '"></div>');
+        if (piechart) {
+            // Re-render so first remove the previous piechart.
+            obj.html('');
         }
-        let piechart = new d3pie(d3_piechart, {
+
+        obj.append('<div id="' + d3_piechart + '"></div>');
+
+        piechart = new d3pie(d3_piechart, {
             "header": {
                 "title": {
                     "text": this.get('title'),
@@ -80,9 +84,7 @@ export default Ember.Component.extend({
                 // onload: null,
                 // onMouseoverSegment: null,
                 // onMouseoutSegment: null,
-                onClickSegment(segment) {
-                    console.log(segment);
-                }
+                // onClickSegment: null
             }
         });
 

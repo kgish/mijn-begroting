@@ -113,21 +113,41 @@ export default Ember.Controller.extend({
         return `${year} | ${periods[period]} | ${direction}`
     }),
 
-    segments: Ember.computed('terms', function(){
+    segments_sliders: Ember.computed('terms', function(){
         let terms = this.get('terms'),
             total_terms = this.get('totalTerms'),
-            segments = [];
+            segments_sliders = [];
 
         terms.forEach(term => {
-           segments.push({
-               label: term.term_name,
-               value: term.total,
-               percentage: (100*term.total/total_terms),
-               caption: FormatMoney(term.total)
-           })
+            segments_sliders.push({
+                label: term.term_name,
+                value: term.total,
+                percentage: (100*term.total/total_terms),
+                caption: FormatMoney(term.total)
+            });
         });
 
-        return segments;
+        return segments_sliders;
+    }),
+
+    segments_pie: Ember.computed('terms', function(){
+        let terms = this.get('terms'),
+            total_terms = this.get('totalTerms'),
+            segments_pies = [];
+
+        terms.forEach(term => {
+            // Only allow non-zero value segments in piechart.
+            if (term.total) {
+                segments_pies.push({
+                    label: term.term_name,
+                    value: term.total,
+                    percentage: (100*term.total/total_terms),
+                    caption: FormatMoney(term.total)
+                });
+            }
+        });
+
+        return segments_pies;
     }),
 
     actions: {

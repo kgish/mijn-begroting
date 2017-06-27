@@ -1,6 +1,5 @@
 /*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
 import Ember from 'ember';
-import FormatMoney from 'mijn-begroting/lib/format-money';
 import config from 'mijn-begroting/config/environment';
 
 export default function(context, id, totalTerms) {
@@ -12,12 +11,18 @@ export default function(context, id, totalTerms) {
                 percentage_other_total = 0,
                 percentage_check_total = 0,
                 value_check_total = 0,
-                percentage_delta;
+                num_sliders_other = 0,
+                percentage_delta,
+                terms = context.get('terms'),
+                terms_new = [];
+
+            //console.log(fn+'terms='+JSON.stringify(terms));
 
             // Calculate total of all other percentages.
             Ember.$('.slider-percentage').each((index,elem) => {
                 if (index !== id) {
                     percentage_other_total += parseInt(Ember.$(elem).text());
+                    num_sliders_other++;
                 }
             });
 
@@ -33,6 +38,7 @@ export default function(context, id, totalTerms) {
             }
 
             percentage_delta = 100 - (percentage_other_total + percentage_new);
+
             if (percentage_delta) {
                 let sign = 1,
                     results = [];
@@ -53,12 +59,18 @@ export default function(context, id, totalTerms) {
                         new_value, new_percentage;
 
                     if (index !== id) {
-                        if (old_percentage) {
-                            let delta = (old_percentage/percentage_other_total)*percentage_delta;
-                            //console.log(fn+'delta='+delta);
-                            new_percentage = old_percentage + sign * delta;
+                        if (sign === -1) {
+                            if (old_percentage) {
+                                let delta = (old_percentage/percentage_other_total)*percentage_delta;
+                                //console.log(fn+'delta='+delta);
+                                new_percentage = old_percentage - delta;
+                            } else {
+                                new_percentage = 0;
+                            }
                         } else {
-                            new_percentage = 0;
+                            let delta = percentage_delta/num_sliders_other;
+                            //console.log(fn+'delta='+delta);
+                            new_percentage = old_percentage + delta;
                         }
                     } else {
                         new_percentage = percentage_new;
@@ -84,38 +96,43 @@ export default function(context, id, totalTerms) {
                     //console.log(fn+'id='+index+', percentage '+old_percentage+' => '+new_percentage+', value '+old_value+' => '+new_value);
                 });
 
-                results.forEach(result => {
-                    result.slider_elem.val(result.new_percentage);
-                    result.percentage_elem.text(result.new_percentage+'%');
-                    result.value_elem.text(FormatMoney(result.new_value));
+                terms.forEach((term,index) => {
+                    let term_new = term,
+                        results_new = results.findBy('index', index);
+                    term_new.total = results_new ? results_new.new_value : term.total;
+                    terms_new.push(term_new);
                 });
 
+                context.set('terms', terms_new);
+
                 if (config.environment === 'development') {
-                    // Verify that the totals are accurate.
-                    if (Math.abs(percentage_check_total - 100) > 1) {
-                        console.error(fn+'percentage_check_total='+percentage_check_total+' => (should be between 99 - 101)');
-                    }
-                    let epsilon = parseInt(0.01 * totalTerms);
-                    if (Math.abs(value_check_total - totalTerms) > epsilon) {
-                        console.error(fn+'value_check_total='+value_check_total+' => (should be between '+(totalTerms-epsilon)+ ' - '+(totalTerms+epsilon)+')');
-                    }
+                    Ember.run.scheduleOnce('afterRender', this, () => {
+                        // Verify that the totals are accurate.
+                        if (Math.abs(percentage_check_total - 100) > 1) {
+                            console.error(fn+'percentage_check_total='+percentage_check_total+' => (should be between 99 - 101)');
+                        }
+                        let epsilon = parseInt(0.01 * totalTerms);
+                        if (Math.abs(value_check_total - totalTerms) > epsilon) {
+                            console.error(fn+'value_check_total='+value_check_total+' => (should be between '+(totalTerms-epsilon)+ ' - '+(totalTerms+epsilon)+')');
+                        }
 
-                    // Verify new values have taken affect for all sliders.
-                    results.forEach(result => {
-                        let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
-                            value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,'')),
-                            value_slider = parseInt(Ember.$('#slider-'+result.index).val());
-
-                        //console.log(fn+'result['+index+']='+JSON.stringify(result));
-                        if (value_slider !== result.new_percentage) {
-                            console.error(fn+'i=' + result.index + ', value_slider (' + value_slider + ') !== result.new_percentage (' + result.new_percentage + ')');
-                        }
-                        if (percentage !== result.new_percentage) {
-                            console.error(fn+'i=' + result.index + ', percentage (' + percentage + ') !== result.new_percentage (' + result.new_percentage + ')');
-                        }
-                        if (value_text !== result.new_value) {
-                            console.error(fn+'i=' + result.index + ', value_text (' + value_text + ') !== result.new_value (' + result.value + ')');
-                        }
+                        // // Verify new values have taken affect for all sliders.
+                        // results.forEach(result => {
+                        //     let percentage = parseInt(Ember.$('#slider-percentage-'+result.index).text()),
+                        //         value_text = parseInt(Ember.$('#slider-value-'+result.index).text().replace(/[^0-9]/g,'')),
+                        //         value_slider = parseInt(Ember.$('#slider-'+result.index).val());
+                        //
+                        //     //console.log(fn+'result['+index+']='+JSON.stringify(result));
+                        //     if (value_slider !== result.new_percentage) {
+                        //         console.error(fn+'i=' + result.index + ', value_slider (' + value_slider + ') !== result.new_percentage (' + result.new_percentage + ')');
+                        //     }
+                        //     if (percentage !== result.new_percentage) {
+                        //         console.error(fn+'i=' + result.index + ', percentage (' + percentage + ') !== result.new_percentage (' + result.new_percentage + ')');
+                        //     }
+                        //     if (value_text !== result.new_value) {
+                        //         console.error(fn+'i=' + result.index + ', value_text (' + value_text + ') !== result.new_value (' + result.new_value + ')');
+                        //     }
+                        // });
                     });
                 }
 

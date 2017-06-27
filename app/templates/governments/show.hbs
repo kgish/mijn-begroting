@@ -118,11 +118,12 @@
     <hr/>
 
     {{#if showTerms}}
+
         <h2>Terms <a href="#" class="btn btn-success" {{action 'showTerms' false}}>Hide</a></h2>
 
         <div class="row">
             <div class="col-md-6 piechart-sliders">
-                {{#each segments as |segment index|}}
+                {{#each segments_sliders as |segment index|}}
                     <div class="row">
                         <div class="col-md-6">
                             <p>
@@ -145,12 +146,13 @@
                 {{d3-piechart
                     title=title
                     subtitle=subtitle
-                    segments=segments
+                    segments=segments_pie
                 }}
             </div>
         </div>
 
-        {{models-table
+        {{! Binding data to terms causes problems when trying to redefine term.total }}
+        {{!models-table
             data=terms
             columns=columnsTerms
             filteringIgnoreCase=true
@@ -159,6 +161,7 @@
             customClasses=customClasses
             simplePaginationTemplate="components/models-table/simple-pagination"
         }}
+
     {{else}}
         <h2>Terms <a href="#" class="btn btn-success" {{action 'showTerms' true}}>
             {{#if loadingTerms}}
@@ -195,6 +198,7 @@
     <hr/>
 
     {{#if showMetrics}}
+
         <h2>Metrics <a href="#" class="btn btn-success" {{action 'showMetrics' false}}>Hide</a></h2>
         {{#if metrics.length}}
             {{models-table
@@ -209,8 +213,11 @@
         {{else}}
             <p>No metrics found.</p>
         {{/if}}
+
     {{else}}
+
         <h2>Metrics <a href="#" class="btn btn-success" {{action 'showMetrics' true}}>Show</a></h2>
+
     {{/if}}
 
 {{/page-header}}
