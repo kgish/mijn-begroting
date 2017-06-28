@@ -140,9 +140,13 @@
                         </div>
                         <div class="col-md-5">
                             {{#if segment.locked}}
-                                {{x-range-input id=(concat 'slider-' index) min=0 max=maxSlider step=1 disabled=true value=segment.percentage action=(action 'updateSlider' index)}}
+                                {{x-range-input id=(concat 'slider-' index) min=0 max=100 step=1 disabled=true value=segment.percentage}}<br/>
+                                <span class="min-slider">{{fa-icon 'angle-left'}} 0</span>
+                                <span class="max-slider">100 {{fa-icon 'angle-right'}}</span>
                             {{else}}
-                                {{x-range-input id=(concat 'slider-' index) min=0 max=maxSlider step=1 value=segment.percentage action=(action 'updateSlider' index)}}
+                                {{x-range-input id=(concat 'slider-' index) min=0 max=maxSlider step=1 value=segment.percentage action=(action 'updateSlider' index)}}<br/>
+                                <span class="min-slider">{{fa-icon 'angle-left'}} 0</span>
+                                <span class="max-slider">{{format-percentage maxSlider true}} {{fa-icon 'angle-right'}}</span>
                             {{/if}}
                         </div>
                         <div class="col-md-1">

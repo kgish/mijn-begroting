@@ -1,9 +1,10 @@
 import Ember from 'ember';
 
-export function formatPercentage(params/*, hash*/) {
-    let percentage = params[0];
+export function formatPercentage(params) {
+    let percentage = params[0],
+        pct = params[1] ? '' : '%';
 
-    return Math.round(percentage) + '%';
+    return Math.round(percentage) + pct;
 }
 
 export default Ember.Helper.helper(formatPercentage);

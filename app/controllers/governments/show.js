@@ -116,10 +116,9 @@ export default Ember.Controller.extend({
     segmentsSliders: Ember.computed('terms', 'lockedCount', function(){
         let terms = this.get('terms'),
             total_terms = this.get('totalTerms'),
-            lockedSliders = this.get('lockedSliders'),
+            lockedSliders = this._initLockedSliders(this),
             segmentsSliders = [];
 
-        this._initLockedSliders(lockedSliders);
         terms.forEach((term,index) => {
             segmentsSliders.push({
                 label: term.term_name,
@@ -206,8 +205,7 @@ export default Ember.Controller.extend({
             Ember.run.debounce(this, this._handleUpdateSlider, 500);
         },
         clickLock(index) {
-            let lockedSliders = this.get('lockedSliders');
-            this._initLockedSliders(lockedSliders);
+            let lockedSliders = this._initLockedSliders(this);
             lockedSliders[index] = !lockedSliders[index];
             this.set('lockedSliders', lockedSliders);
             this.set('lockedCount', parseInt(this.get('lockedCount')+1));
@@ -215,15 +213,21 @@ export default Ember.Controller.extend({
     },
 
     // Private
+
     _handleUpdateSlider() {
         HandleUpdateSlider(this, this.get('sliderId'), this.get('totalTerms'));
     },
-    _initLockedSliders(lockedSliders) {
+
+    _initLockedSliders(context) {
+        let name = 'lockedSliders',
+            lockedSliders = context.get(name);
         if (lockedSliders.length === 0) {
-            let len = this.get('terms').length;
+            let len = context.get('terms').length;
             while (len--) {
                 lockedSliders.push(false);
             }
+            context.set(name, lockedSliders);
         }
+        return context.get(name);
     }
 });

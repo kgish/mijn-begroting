@@ -108,3 +108,17 @@ $models-table-font-size: 0.8rem;
 input[type="range"]:disabled {
   opacity: 0.5;
 }
+
+.min-slider,
+.max-slider {
+  font-size: smaller;
+  color: darkgrey;
+}
+
+.max-slider {
+  float: right;
+}
+
+.slider-percentage {
+  float: right;
+}
